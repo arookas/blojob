@@ -94,7 +94,7 @@ namespace arookas {
 				mAnchor = (bloAnchor)reader.Read8();
 				--numparams;
 			} else {
-				setAnchor(bloAnchor.TopLeft);
+				mAnchor = bloAnchor.TopLeft;
 			}
 
 			if (numparams > 0) {
@@ -113,7 +113,7 @@ namespace arookas {
 
 			reader.Skip(4);
 		}
-		
+
 		public void move(bloPoint point) {
 			move(point.x, point.y);
 		}
@@ -132,16 +132,6 @@ namespace arookas {
 		public virtual void reform(int left, int top, int right, int bottom) {
 			mRect.reform(left, top, right, bottom);
 		}
-		public virtual bool setConnectParent(bool set) {
-			mConnectParent = false;
-			return false;
-		}
-		public void setCullMode(gxCullMode cull) {
-			mCullMode = cull;
-		}
-		public void setAnchor(bloAnchor anchor) {
-			mAnchor = anchor;
-		}
 		public virtual bloPane search(uint name) {
 			if (mName == name) {
 				return this;
@@ -153,10 +143,6 @@ namespace arookas {
 				}
 			}
 			return null;
-		}
-
-		public void rotate(double angle) {
-			mAngle += angle;
 		}
 
 		Vector2d getAnchorOffset() {
@@ -232,20 +218,73 @@ namespace arookas {
 			GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 		}
 
+		public uint getName() {
+			return mName;
+		}
 		public bool getVisible() {
 			return mVisible;
+		}
+		public bloRectangle getRectangle() {
+			return mRect;
+		}
+		public gxCullMode getCullMode() {
+			return mCullMode;
+		}
+		public bloAnchor getAnchor() {
+			return mAnchor;
+		}
+		public double getAngle() {
+			return mAngle;
+		}
+		public byte getAlpha() {
+			return mAlpha;
+		}
+		public bool getInheritAlpha() {
+			return mInheritAlpha;
+		}
+		public bool getConnectParent() {
+			return mConnectParent;
+		}
+
+		public uint setName(uint name) {
+			uint old = mName;
+			mName = name;
+			return old;
 		}
 		public bool setVisible(bool visible) {
 			bool old = mVisible;
 			mVisible = visible;
 			return old;
 		}
-
-		public uint getName() {
-			return mName;
+		public bloRectangle setRectangle(bloRectangle rectangle) {
+			bloRectangle old = mRect;
+			mRect = rectangle;
+			return old;
 		}
-		public bloRectangle getRectangle() {
-			return mRect;
+		public void setCullMode(gxCullMode cull) {
+			mCullMode = cull;
+		}
+		public void setAnchor(bloAnchor anchor) {
+			mAnchor = anchor;
+		}
+		public double setAngle(double angle) {
+			double old = mAngle;
+			mAngle = angle;
+			return old;
+		}
+		public byte setAlpha(byte alpha) {
+			byte old = mAlpha;
+			mAlpha = alpha;
+			return old;
+		}
+		public bool setInheritAlpha(bool set) {
+			bool old = mInheritAlpha;
+			mInheritAlpha = set;
+			return old;
+		}
+		public virtual bool setConnectParent(bool set) {
+			mConnectParent = false;
+			return false;
 		}
 
 		public virtual void info() {
