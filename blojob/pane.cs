@@ -113,7 +113,60 @@ namespace arookas {
 
 			reader.Skip(4);
 		}
+		
+		public virtual void saveBlo1(aBinaryWriter writer) {
+			if (writer == null) {
+				throw new ArgumentNullException("writer");
+			}
 
+			byte numparams;
+
+			if (!mInheritAlpha) {
+				numparams = 10;
+			} else if (mAlpha < 255) {
+				numparams = 9;
+			} else if (mAnchor != bloAnchor.TopLeft) {
+				numparams = 8;
+			} else if (mAngle != 0.0d) {
+				numparams = 7;
+			} else {
+				numparams = 6;
+			}
+
+			writer.Write8(numparams);
+			writer.Write8((byte)(mVisible ? 1 : 0));
+			writer.Step(2);
+			writer.Write32(mName);
+			writer.WriteS16((short)mRect.left);
+			writer.WriteS16((short)mRect.top);
+			writer.WriteS16((short)mRect.width);
+			writer.WriteS16((short)mRect.height);
+
+			numparams -= 6;
+
+			if (numparams > 0) {
+				writer.Write16((ushort)mAngle);
+				--numparams;
+			}
+
+			if (numparams > 0) {
+				writer.Write8((byte)mAnchor);
+				--numparams;
+			}
+
+			if (numparams > 0) {
+				writer.Write8(mAlpha);
+				--numparams;
+			}
+
+			if (numparams > 0) {
+				writer.Write8((byte)(mInheritAlpha ? 1 : 0));
+				--numparams;
+			}
+
+			writer.WritePadding(4, 0);
+		}
+		
 		public void move(bloPoint point) {
 			move(point.x, point.y);
 		}
