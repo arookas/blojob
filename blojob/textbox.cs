@@ -97,22 +97,24 @@ namespace arookas {
 		public bloFont getFont() {
 			return mFont;
 		}
+		public ushort[] getString() {
+			return mText;
+		}
+		
 		public bloFont setFont(bloFont font) {
 			bloFont oldFont = mFont;
 			mFont = font;
 			return oldFont;
 		}
-
-		public ushort[] getString() {
-			return mText;
-		}
-		public void setString(ushort[] buffer) {
+		public ushort[] setString(ushort[] buffer) {
+			ushort[] old = mText;
 			if (buffer == null) {
 				buffer = new ushort[1] { 0 };
 			}
 			mText = buffer;
+			return old;
 		}
-
+		
 		public override bool setConnectParent(bool set) {
 			if (mParent == null || !(mParent is bloWindow)) {
 				return false;
