@@ -3,6 +3,7 @@ using arookas.IO.Binary;
 using OpenTK.Graphics.OpenGL;
 using System;
 using System.IO;
+using System.Text;
 
 namespace arookas {
 
@@ -23,7 +24,7 @@ namespace arookas {
 		}
 
 		public static bloScreen loadBlo1(Stream stream) {
-			aBinaryReader reader = new aBinaryReader(stream, Endianness.Big);
+			aBinaryReader reader = new aBinaryReader(stream, Endianness.Big, Encoding.GetEncoding(1252));
 			bloScreen scrn = new bloScreen();
 			if (reader.Read32() != cSCRN) {
 				return null;
