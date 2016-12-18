@@ -45,6 +45,15 @@ namespace arookas {
 			return old;
 		}
 
+		public static void save(bloResource resource, aBinaryWriter writer) {
+			if (resource != null) {
+				resource.save(writer);
+			} else {
+				writer.Write8(0);
+				writer.Write8(0);
+			}
+		}
+
 	}
 	
 	enum bloResourceType {
