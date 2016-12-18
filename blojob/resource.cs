@@ -13,6 +13,12 @@ namespace arookas {
 
 		public abstract void load(Stream stream);
 
+		public void save(aBinaryWriter writer) {
+			writer.Write8((byte)mResourceType);
+			writer.Write8((byte)mResourcePath.Length);
+			writer.WriteString(mResourcePath);
+		}
+
 		public bloResourceType getResourceType() {
 			return mResourceType;
 		}
