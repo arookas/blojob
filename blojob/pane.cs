@@ -113,7 +113,7 @@ namespace arookas {
 
 			reader.Skip(4);
 		}
-		
+
 		public virtual void saveBlo1(aBinaryWriter writer) {
 			if (writer == null) {
 				throw new ArgumentNullException("writer");
@@ -269,6 +269,19 @@ namespace arookas {
 			GL.Vertex3(mRect.left, mRect.bottom, 0.0d);
 			GL.End();
 			GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+		}
+
+		public bloPane getParentPane() {
+			return mParent;
+		}
+		public int getChildPane() {
+			return mChildren.Count;
+		}
+		public bloPane getChildPane(int index) {
+			return mChildren[index];
+		}
+		public TPane getChildPane<TPane>(int index) where TPane : bloPane {
+			return (mChildren[index] as TPane);
 		}
 
 		public uint getName() {
