@@ -131,7 +131,7 @@ namespace arookas {
 							break;
 						}
 						bloFont font = textbox.getFont();
-						ushort[] buffer = font.createStringBuffer(Console.ReadLine());
+						ushort[] buffer = font.encode(Console.ReadLine());
 						textbox.setString(buffer);
 						break;
 					}

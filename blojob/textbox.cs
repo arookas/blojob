@@ -91,7 +91,7 @@ namespace arookas {
 				mText = new ushort[1] { 0 };
 				return 0;
 			}
-			return mFont.createStringBuffer(buffer, out mText);
+			return mFont.encode(buffer, out mText);
 		}
 
 		public bloFont getFont() {

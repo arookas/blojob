@@ -73,27 +73,27 @@ namespace arookas {
 			setGL();
 		}
 
-		public ushort[] createStringBuffer(string text) {
-			return createStringBuffer(null, text);
+		public ushort[] encode(string text) {
+			return encode(null, text);
 		}
-		public ushort[] createStringBuffer(string format, params object[] args) {
-			return createStringBuffer(null, format, args);
+		public ushort[] encode(string format, params object[] args) {
+			return encode(null, format, args);
 		}
-		public ushort[] createStringBuffer(Encoding encoding, string text) {
-			return createStringBuffer(encoding, "{0}", text);
+		public ushort[] encode(Encoding encoding, string text) {
+			return encode(encoding, "{0}", text);
 		}
-		public ushort[] createStringBuffer(Encoding encoding, string format, params object[] args) {
+		public ushort[] encode(Encoding encoding, string format, params object[] args) {
 			if (encoding == null) {
 				switch (getFontType()) {
 					case bloFontType.Font8Bit: {
 						encoding = Encoding.GetEncoding(1252); // Latin-1 / ISO-8859-1
 						break;
 					}
-					case bloFontType.Font16Bit:
+					case bloFontType.Font16Bit: {
+						encoding = Encoding.BigEndianUnicode; // BE UTF-16
+						break;
+					}
 					case bloFontType.FontSJIS: {
-						// I realize that we can't really assume either CP-1252 or CP-932
-						// for 16-bit encoding, since they could unambigiously reference
-						// characters from both sets, so I just go with the most probable
 						encoding = Encoding.GetEncoding(932); // S-JIS
 						break;
 					}
@@ -102,10 +102,10 @@ namespace arookas {
 			var text = String.Format(format, args);
 			var encoded = encoding.GetBytes(text);
 			ushort[] buffer;
-			createStringBuffer(encoded, out buffer);
+			encode(encoded, out buffer);
 			return buffer;
 		}
-		public int createStringBuffer(byte[] inBuffer, out ushort[] outBuffer) {
+		public int encode(byte[] inBuffer, out ushort[] outBuffer) {
 			outBuffer = new ushort[inBuffer.Length + 1];
 			int index = 0, newSize = 0;
 			while (index < inBuffer.Length) {
@@ -119,6 +119,55 @@ namespace arookas {
 			outBuffer[newSize++] = 0;
 			Array.Resize(ref outBuffer, newSize);
 			return (newSize - 1);
+		}
+
+		public byte[] decodeToBytes(ushort[] buffer) {
+			var decoded = new byte[buffer.Length * 2];
+			var newSize = 0;
+			switch (getFontType()) {
+				case bloFontType.Font8Bit: {
+					for (int i = 0; i < buffer.Length; ++i) {
+						decoded[newSize++] = (byte)buffer[i];
+					}
+					break;
+				}
+				case bloFontType.Font16Bit: {
+					for (int i = 0; i < buffer.Length; ++i) {
+						decoded[newSize++] = (byte)(buffer[i] >> 8);
+						decoded[newSize++] = (byte)(buffer[i] >> 0);
+					}
+					break;
+				}
+				case bloFontType.FontSJIS: {
+					for (int i = 0; i < buffer.Length; ++i) {
+						if (buffer[i] >= 0x8000) {
+							decoded[newSize++] = (byte)(buffer[i] >> 8);
+						}
+						decoded[newSize++] = (byte)buffer[i];
+					}
+					break;
+				}
+			}
+			Array.Resize(ref decoded, newSize);
+			return decoded;
+		}
+		public string decodeToUtf16(ushort[] buffer) {
+			var decoded = decodeToBytes(buffer);
+			switch (getFontType()) {
+				case bloFontType.Font8Bit: {
+					var encoding = Encoding.GetEncoding(1252);
+					return encoding.GetString(decoded);
+				}
+				case bloFontType.Font16Bit: {
+					var encoding = Encoding.BigEndianUnicode;
+					return encoding.GetString(decoded);
+				}
+				case bloFontType.FontSJIS: {
+					var encoding = Encoding.GetEncoding(932);
+					return encoding.GetString(decoded);
+				}
+			}
+			return "";
 		}
 
 		protected static bool isLeadByte_1Byte(int character) {
