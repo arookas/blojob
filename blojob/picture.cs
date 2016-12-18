@@ -97,6 +97,76 @@ namespace arookas {
 			reader.Skip(4);
 		}
 
+		public override void saveBlo1(aBinaryWriter writer) {
+			base.saveBlo1(writer);
+
+			byte numparams;
+
+			if (mColors[cBottomRight].rgba != bloColor.cWhite) {
+				numparams = 11;
+			} else if (mColors[cBottomLeft].rgba != bloColor.cWhite) {
+				numparams = 10;
+			} else if (mColors[cTopRight].rgba != bloColor.cWhite) {
+				numparams = 9;
+			} else if (mColors[cTopLeft].rgba != bloColor.cWhite) {
+				numparams = 8;
+			} else if (mToColor.rgba != bloColor.cOne) {
+				numparams = 7;
+			} else if (mFromColor.rgba != bloColor.cZero) {
+				numparams = 6;
+			} else if (mWrapS != bloWrapMode.None || mWrapT != bloWrapMode.None) {
+				numparams = 5;
+			} else if (mMirror != 0 || mRotate90) {
+				numparams = 4;
+			} else {
+				numparams = 3;
+			}
+
+			writer.Write8(numparams);
+			bloResource.save(mTexture, writer);
+			bloResource.save(mPalette, writer);
+			writer.Write8((byte)mBinding);
+
+			numparams -= 3;
+
+			if (numparams > 0) {
+				byte bits = (byte)mMirror;
+				if (mRotate90) {
+					bits |= 4;
+				}
+				writer.Write8(bits);
+				--numparams;
+			}
+
+			if (numparams > 0) {
+				byte bits = 0;
+				bits |= (byte)mWrapS;
+				bits <<= 2;
+				bits |= (byte)mWrapT;
+				writer.Write8(bits);
+				--numparams;
+			}
+
+			if (numparams > 0) {
+				writer.Write32(mFromColor.rgba);
+				--numparams;
+			}
+
+			if (numparams > 0) {
+				writer.Write32(mToColor.rgba);
+				--numparams;
+			}
+
+			for (int i = 0; i < 4; ++i) {
+				if (numparams > 0) {
+					writer.Write32(mColors[i].rgba);
+					--numparams;
+				}
+			}
+
+			writer.WritePadding(4, 0);
+		}
+
 		protected override void loadGLSelf() {
 			base.loadGLSelf();
 			if (mTexture != null) {

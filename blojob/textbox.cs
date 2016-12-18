@@ -70,6 +70,64 @@ namespace arookas {
 			reader.Skip(4);
 		}
 
+		public override void saveBlo1(aBinaryWriter writer) {
+			base.saveBlo1(writer);
+
+			byte numparams;
+
+			if (mToColor.rgba != bloColor.cOne) {
+				numparams = 13;
+			} else if (mFromColor.rgba != bloColor.cZero) {
+				numparams = 12;
+			} else if (mConnectParent) {
+				numparams = 11;
+			} else {
+				numparams = 10;
+			}
+
+			bloResource.save(mFont, writer);
+			writer.Write32(mTopColor.rgba);
+			writer.Write32(mBottomColor.rgba);
+
+			byte binding = 0;
+			binding |= (byte)mHBinding;
+			binding <<= 2;
+			binding |= (byte)mVBinding;
+			writer.Write8(binding);
+
+			writer.WriteS16((short)mFontSpacing);
+			writer.WriteS16((short)mFontLeading);
+			writer.Write16((ushort)mFontWidth);
+			writer.Write16((ushort)mFontHeight);
+
+			if (mFont != null) {
+				var strbuffer = mFont.decodeToBytes(mText);
+				writer.Write16((ushort)strbuffer.Length);
+				writer.Write8s(strbuffer);
+			} else {
+				writer.Write16(0);
+			}
+
+			numparams -= 10;
+
+			if (numparams > 0) {
+				writer.Write8((byte)(mConnectParent ? 1 : 0));
+				--numparams;
+			}
+
+			if (numparams > 0) {
+				writer.Write32(mFromColor.rgba);
+				--numparams;
+			}
+
+			if (numparams > 0) {
+				writer.Write32(mToColor.rgba);
+				--numparams;
+			}
+
+			writer.WritePadding(4, 0);
+		}
+
 		protected override void loadGLSelf() {
 			base.loadGLSelf();
 			if (mFont != null) {

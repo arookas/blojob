@@ -141,6 +141,63 @@ namespace arookas {
 			}
 		}
 
+		public override void saveBlo1(aBinaryWriter writer) {
+			base.saveBlo1(writer);
+
+			byte numparams;
+
+			if (mToColor.rgba != bloColor.cOne) {
+				numparams = 17;
+			} else if (mFromColor.rgba != bloColor.cZero) {
+				numparams = 16;
+			} else if (mContentTexture != null) {
+				numparams = 15;
+			} else {
+				numparams = 14;
+			}
+
+			writer.Write8(numparams);
+			writer.Write16((ushort)mContentRect.left);
+			writer.Write16((ushort)mContentRect.top);
+			writer.Write16((ushort)mContentRect.width);
+			writer.Write16((ushort)mContentRect.height);
+
+			for (int i = 0; i < 4; ++i) {
+				bloResource.save(mTextures[i].texture, writer);
+			}
+			bloResource.save(mPalette, writer);
+
+			byte bits = 0;
+			for (int i = 0; i < 4; ++i) {
+				bits <<= 2;
+				bits |= (byte)mTextures[i].mirror;
+			}
+			writer.Write8(bits);
+
+			for (int i = 0; i < 4; ++i) {
+				writer.Write32(mTextures[i].color.rgba);
+			}
+
+			numparams -= 14;
+
+			if (numparams > 0) {
+				bloResource.save(mContentTexture, writer);
+				--numparams;
+			}
+
+			if (numparams > 0) {
+				writer.Write32(mFromColor.rgba);
+				--numparams;
+			}
+
+			if (numparams > 0) {
+				writer.Write32(mToColor.rgba);
+				--numparams;
+			}
+
+			writer.WritePadding(4, 0);
+		}
+
 		protected override void loadGLSelf() {
 			base.loadGLSelf();
 			for (int i = 0; i < 4; ++i) {
