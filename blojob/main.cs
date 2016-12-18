@@ -14,6 +14,7 @@ namespace arookas {
 
 		static void Main(string[] args) {
 			Console.Title = "";
+			Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
 			var cmd = new aCommandLine(args);
 			runViewer(cmd);
 		}
