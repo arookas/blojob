@@ -2,9 +2,9 @@
 using arookas.Collections;
 using arookas.IO.Binary;
 using OpenTK.Graphics.OpenGL;
+using System;
 using System.Diagnostics;
 using System.IO;
-using System;
 
 namespace arookas {
 
@@ -164,24 +164,6 @@ namespace arookas {
 			}
 		}
 
-		int convertSjis(int character, ushort? overrideCode) {
-			int leadByte = ((character >> 8) & 0xFF);
-			int trailByte = ((character >> 0) & 0xFF);
-			int index = (trailByte - 64);
-			if (index >= 64) {
-				--index;
-			}
-			// to allow loading TWW fonts, we use TWW's implementation
-			// and allow overriding the base code from within the MAP1.
-			// SMS hardcodes the parameter to null so we should be fine.
-			// the SDK's implementation has even stricter error handling.
-			int baseCode = 796;
-			if (overrideCode != null) {
-				baseCode = overrideCode.Value;
-			}
-			return (baseCode + index + ((leadByte - 136) * 188 - 94));
-		}
-
 		public int getFontCode(int character) {
 			int code = mInfoBlock.invalChar;
 			// the font does not have half-width characters, convert them to full-width
@@ -194,15 +176,15 @@ namespace arookas {
 					continue;
 				}
 				switch (block.mapType) {
-					case EMapType.Zero: {
+					case MapType.LinearMap: {
 						code = (character - block.firstChar);
 						break;
 					}
-					case EMapType.Two: {
+					case MapType.TableMap: {
 						code = block.data[character - block.firstChar];
 						break;
 					}
-					case EMapType.Three: {
+					case MapType.MapMap: {
 						int upper = (block.dataCount - 1), lower = 0;
 						while (upper >= lower) {
 							int index = (upper + lower);
@@ -217,7 +199,7 @@ namespace arookas {
 						}
 						break;
 					}
-					case EMapType.One: {
+					case MapType.KanjiMap: {
 						// in TWW individual MAP1 blocks may override the baseCode value.
 						// SMS doesn't check the data count and is hardcoded instead,
 						// but it is probably safe to support TWW's implementation here.
@@ -365,6 +347,24 @@ namespace arookas {
 			0x829A, 0x816F, 0x8162, 0x8170, 0x8160,
 		};
 
+		static int convertSjis(int character, ushort? overrideCode) {
+			int leadByte = ((character >> 8) & 0xFF);
+			int trailByte = ((character >> 0) & 0xFF);
+			int index = (trailByte - 64);
+			if (index >= 64) {
+				--index;
+			}
+			// to allow loading TWW fonts, we use TWW's implementation
+			// and allow overriding the base code from within the MAP1.
+			// SMS hardcodes the parameter to null so we should be fine.
+			// the SDK's implementation has even stricter error handling.
+			int baseCode = 796;
+			if (overrideCode != null) {
+				baseCode = overrideCode.Value;
+			}
+			return (baseCode + index + ((leadByte - 136) * 188 - 94));
+		}
+
 		const uint cFONT = 0x464F4E54u;
 		const uint cBFN1 = 0x62666E31u;
 		const uint cINF1 = 0x494E4631u;
@@ -372,11 +372,11 @@ namespace arookas {
 		const uint cGLY1 = 0x474C5931u;
 		const uint cMAP1 = 0x4D415031u;
 
-		enum EMapType {
-			Zero,
-			One,
-			Two,
-			Three,
+		enum MapType {
+			LinearMap,
+			KanjiMap,
+			TableMap,
+			MapMap,
 		}
 
 		class FontBlock {
@@ -459,17 +459,17 @@ namespace arookas {
 
 		class MapBlock {
 
-			public EMapType mapType;
+			public MapType mapType;
 			public int firstChar, lastChar, dataCount;
 			public ushort[] data;
 			public ushort[] code;
 
 			public MapBlock(aBinaryReader reader) {
-				mapType = (EMapType)reader.Read16();
+				mapType = (MapType)reader.Read16();
 				firstChar = reader.Read16();
 				lastChar = reader.Read16();
 				dataCount = reader.Read16();
-				if (mapType == EMapType.Three) {
+				if (mapType == MapType.MapMap) {
 					data = new ushort[dataCount];
 					code = new ushort[dataCount];
 					for (int i = 0; i < dataCount; ++i) {
