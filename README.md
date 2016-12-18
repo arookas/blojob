@@ -21,7 +21,7 @@ To compile _blojob_, you'll need to have the following libraries compiled and/or
 The repository contains a [premake5](https://premake.github.io/) [script](premake5.lua).
 Simply run the script with premake5 and build the resulting solution.
 
-> _**Note:** You might need to fill in any unresolved-reference errors by supplying your IDE with the paths to the depencies listed above._
+> _**Note:** You might need to fill in any unresolved-reference errors by supplying your IDE with the paths to the dependencies listed above._
 
 ### Usage
 
