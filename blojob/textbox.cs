@@ -22,6 +22,45 @@ namespace arookas {
 			mBottomColor = new bloColor(bloColor.cWhite);
 		}
 
+		protected override void loadCompact(aBinaryReader reader) {
+			base.loadCompact(reader);
+
+			var finder = bloResourceFinder.getFinder();
+
+			mFont = finder.find<bloResFont>(reader, "font");
+
+			mTopColor = new bloColor(reader.Read32());
+			mBottomColor = new bloColor(reader.Read32());
+
+			int hbinding = reader.Read8();
+			mHBinding = (bloTextboxHBinding)(hbinding & 127);
+			mVBinding = (bloTextboxVBinding)reader.Read8();
+
+			if ((hbinding & 0x80) != 0) {
+				mFontSpacing = reader.ReadS16();
+				mFontLeading = reader.ReadS16();
+				mFontWidth = reader.Read16();
+				mFontHeight = reader.Read16();
+			} else if (mFont != null) {
+				mFontSpacing = 0;
+				mFontLeading = mFont.getLeading();
+				mFontWidth = mFont.getWidth();
+				mFontHeight = mFont.getHeight();
+			} else {
+				mFontSpacing = 0;
+				mFontLeading = 0;
+				mFontWidth = 0;
+				mFontHeight = 0;
+			}
+
+			int strlen = reader.Read16();
+			setString(reader.Read8s(strlen));
+
+			mFromColor = new bloColor(bloColor.cZero);
+			mToColor = new bloColor(bloColor.cOne);
+
+			reader.Skip(4);
+		}
 		protected override void loadBlo1(aBinaryReader reader) {
 			base.loadBlo1(reader);
 

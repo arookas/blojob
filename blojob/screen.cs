@@ -23,6 +23,68 @@ namespace arookas {
 			return base.search(name);
 		}
 
+		public static bloScreen loadCompact(Stream stream) {
+			aBinaryReader reader = new aBinaryReader(stream, Endianness.Big, Encoding.GetEncoding(1252));
+			bloScreen scrn = new bloScreen();
+			if (!loadCompact(scrn, reader)) {
+				return null;
+			}
+			return scrn;
+		}
+		static bool loadCompact(bloPane parent, aBinaryReader reader) {
+			bloPane lastPane = parent;
+			for (;;) {
+				long start = reader.Position;
+				ushort typeID = reader.Read16(); // this is actually a peek in SMS, but fuck that
+
+				switch (typeID) {
+					default: {
+						Console.WriteLine(">>> Unknown '{0:X4}' section at 0x{1:X6}", typeID, start);
+						return false;
+					}
+					case 0: {
+						return true;
+					}
+					case 2: {
+						reader.Step(2);
+						return true;
+					}
+					case 1: {
+						reader.Step(2);
+						if (!loadCompact(lastPane, reader)) {
+							return false;
+						}
+						break;
+					}
+					case 16: {
+						lastPane = new bloPane();
+						lastPane.load(parent, reader, bloFormat.Compact);
+						if (parent is bloScreen) {
+							var oldrect = lastPane.getRectangle();
+							var newrect = new bloRectangle(0, 0, oldrect.width, oldrect.height);
+							parent.setRectangle(newrect);
+						}
+						break;
+					}
+					case 17: {
+						lastPane = new bloWindow();
+						lastPane.load(parent, reader, bloFormat.Compact);
+						break;
+					}
+					case 18: {
+						lastPane = new bloPicture();
+						lastPane.load(parent, reader, bloFormat.Compact);
+						break;
+					}
+					case 19: {
+						lastPane = new bloTextbox();
+						lastPane.load(parent, reader, bloFormat.Compact);
+						break;
+					}
+				}
+			}
+		}
+
 		public static bloScreen loadBlo1(Stream stream) {
 			aBinaryReader reader = new aBinaryReader(stream, Endianness.Big, Encoding.GetEncoding(1252));
 			bloScreen scrn = new bloScreen();

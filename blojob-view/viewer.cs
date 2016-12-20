@@ -27,9 +27,12 @@ namespace arookas {
 		}
 
 		void initScreen() {
-			bloScreen screen;
+			bloScreen screen = null;
 			using (Stream stream = File.OpenRead(mInput)) {
-				screen = bloScreen.loadBlo1(stream);
+				switch (mFormat) {
+					case bloFormat.Compact: screen = bloScreen.loadCompact(stream); break;
+					case bloFormat.Blo1: screen = bloScreen.loadBlo1(stream); break;
+				}
 			}
 			if (screen != null) {
 				mScreen = screen;
