@@ -9,9 +9,11 @@ varying vec4 vertexColor;
 void main() {
 	
 	vec4 texel = texture2D(texture, gl_TexCoord[0].st);
+
 	if (transparency == 0) {
-		texel.a = 1;
+		texel.a = 1.0;
 	}
-	gl_FragColor = ((fromColor * (1 - texel) + toColor * texel) * vertexColor);
-	
+
+	gl_FragColor = ((fromColor * (1.0 - texel) + toColor * texel) * vertexColor);
+
 }
