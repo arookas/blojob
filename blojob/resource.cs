@@ -93,9 +93,13 @@ namespace arookas {
 
 		public T find<T>(aBinaryReader reader, string directory)
 			where T : bloResource, new() {
-
+			bloResourceType type;
+			return find<T>(reader, directory, out type);
+		}
+		public T find<T>(aBinaryReader reader, string directory, out bloResourceType type)
+			where T : bloResource, new() {
 			long start = reader.Position;
-			bloResourceType type = (bloResourceType)reader.Read8();
+			type = (bloResourceType)reader.Read8();
 			int length = reader.Read8();
 			string name = reader.ReadString(length);
 
