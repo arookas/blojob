@@ -90,19 +90,15 @@ namespace arookas {
 			bottomColor.a = ((bottomColor.a * alpha) / 256);
 			mFont.setGradColor(topColor, (mWorkState.gradientMode ? bottomColor : topColor));
 
-			bool monospace = false; // r19
-			bool advanceCursor = false; // r17
-			double cursorStartX; // f18
+			bool monospace = false;
+			bool advanceCursor = false;
+			double cursorStartX;
 			
 			int stringPtr = 0;
 
 			for (;;) {
 
-				// 802C6930
-				int character = buffer[stringPtr++]; // r20
-
-				// 802C6970
-				if (character == '\0' || stringPtr > buffer.Length) {
+				if (stringPtr >= buffer.Length) {
 					if (!draw && lines != null) {
 						lines[line] = bloMath.round(lineWidth);
 					}
@@ -110,13 +106,21 @@ namespace arookas {
 					break;
 				}
 
-				// 802C69BC
+				int character = buffer[stringPtr++];
+
+				if (character == '\0') {
+					if (!draw && lines != null) {
+						lines[line] = bloMath.round(lineWidth);
+					}
+					++line;
+					break;
+				}
+
 				cursorStartX = mCursor.X;
 				advanceCursor = true;
 
 				if (character < 32) {
 					if (character == 27) {
-						// 802C69D4
 						ushort escapeCode = doEscapeCode(buffer, ref stringPtr, alpha);
 						if (escapeCode == cHM) {
 							if (!draw && lines != null) {
@@ -125,7 +129,7 @@ namespace arookas {
 							++line;
 							mCursor.X = cursor.X;
 							if (line == cMaxLines) {
-								break; // -> 802C6F28
+								break;
 							}
 							monospace = false;
 							lineWidth = 0.0d;
@@ -133,9 +137,7 @@ namespace arookas {
 						if (escapeCode != 0) {
 							advanceCursor = false;
 						}
-						// -> 802C6DEC
 					} else {
-						// 802C6A48
 						doCtrlCode(character);
 						advanceCursor = false;
 						if (character == '\n') {
@@ -144,11 +146,10 @@ namespace arookas {
 							}
 							++line;
 							if (line == cMaxLines) {
-								break; // -> 802C6F28
+								break;
 							}
 							lineWidth = 0.0d;
 							monospace = false;
-							// -> 802C6DEC
 						} else {
 							switch (character) {
 								case '\b':
@@ -161,14 +162,11 @@ namespace arookas {
 									break;
 								}
 							}
-							// -> 802C6DEC
 						}
 					}
 				} else {
-					// 802C6AC8
 					// NOTE: the multi-byte EOS check was removed because it will never occur
 					// since as we pre-parse the bytes in the string to characters for the ushort[]
-					// 802C6B0C
 					if (mFont.getMonoFlag()) {
 						mCursorWidth = mFont.getMonoWidth();
 					} else {
@@ -177,9 +175,8 @@ namespace arookas {
 						mCursorWidth = (monospace ? entry.width : (entry.width + entry.kerning));
 					}
 					mCursorWidth *= ((double)mWorkState.fontWidth / (double)mFont.getWidth());
-					double totalWidth = ((mCursor.X + mCursorWidth) - mOrigin.x); // ((int)(cScalar * ((mCursor.X + mCursorWidth) - mOrigin.x)) / cScalar);
+					double totalWidth = ((mCursor.X + mCursorWidth) - mOrigin.x);
 					if (totalWidth > width && mCursor.X > cursor.X) {
-						// 802C6C5C
 						--stringPtr; // since we optimized out the multibyte checks, -- is fine
 						mCursor.Y += mWorkState.leading;
 						if (!draw && lines != null) {
@@ -187,15 +184,13 @@ namespace arookas {
 						}
 						++line;
 						if (line == cMaxLines) {
-							break; // -> 802C6F28
+							break;
 						}
 						advanceCursor = false;
 						monospace = false;
 						mCursor.X = mOrigin.x;
 						lineWidth = 0.0d;
-						// -> 802C6DEC
 					} else {
-						// 802C6D04
 						if (draw) {
 							mFont.drawChar(
 								(mCursor.X + (lines != null ? lines[line] : 0)),
@@ -207,10 +202,8 @@ namespace arookas {
 						}
 						monospace = true;
 						mCursor.X += mCursorWidth;
-						// -> 802C6DEC
 					}
 				}
-				// 802C6DEC
 				if (advanceCursor) {
 					if ((mCursor.X - cursor.X) > lineWidth) {
 						lineWidth = (mCursor.X - cursor.X);
@@ -239,7 +232,6 @@ namespace arookas {
 				}
 			}
 
-			// 802C6F28
 			if (lines != null) {
 				lines[line] = -1;
 			}

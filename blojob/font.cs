@@ -116,9 +116,8 @@ namespace arookas {
 				}
 				outBuffer[newSize++] = character;
 			}
-			outBuffer[newSize++] = 0;
 			Array.Resize(ref outBuffer, newSize);
-			return (newSize - 1);
+			return newSize;
 		}
 
 		public byte[] decodeToBytes(ushort[] buffer) {
