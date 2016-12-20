@@ -68,14 +68,16 @@ namespace arookas {
 		Global, // resource may be found in any loaded global resource
 	}
 
-	public class bloResourceFinder {
+	public class bloResourceFinder : IDisposable {
 
 		string mLocalPath;
 		List<string> mGlobalPaths;
+		Dictionary<string, bloResource> mCache;
 
 		public bloResourceFinder(string localPath) {
 			mLocalPath = Path.GetFullPath(localPath);
 			mGlobalPaths = new List<string>(10);
+			mCache = new Dictionary<string, bloResource>(100, new EqualityComparer());
 		}
 
 		public string setLocalPath(string localPath) {
@@ -89,6 +91,10 @@ namespace arookas {
 		}
 		public void clearGlobalPaths() {
 			mGlobalPaths.Clear();
+		}
+
+		public void clearCache() {
+			mCache.Clear();
 		}
 
 		public T find<T>(aBinaryReader reader, string directory)
@@ -127,6 +133,10 @@ namespace arookas {
 			}
 			T resource = null;
 			if (path != null && File.Exists(path)) {
+				bloResource cached;
+				if (mCache.TryGetValue(path, out cached)) {
+					return (cached as T);
+				}
 				resource = new T();
 				resource.setResourceType(type);
 				resource.setResourcePath(name);
@@ -138,7 +148,14 @@ namespace arookas {
 			if (resource == null && type != bloResourceType.None) {
 				Console.WriteLine(">>> FAILED: could not find {0} resource '{1}' at 0x{2:X}.", type, name, start);
 			}
+			if (path != null && resource != null) {
+				mCache[path] = resource;
+			}
 			return resource;
+		}
+
+		public void Dispose() {
+			clearCache();
 		}
 
 		static bloResourceFinder sInstance;
@@ -150,6 +167,20 @@ namespace arookas {
 			bloResourceFinder old = sInstance;
 			sInstance = finder;
 			return old;
+		}
+
+		class EqualityComparer : IEqualityComparer<string> {
+
+			public bool Equals(string x, string y) {
+				if (x == null || y == null) {
+					return (x ?? "") == (y ?? "");
+				}
+				return x.Equals(y, StringComparison.InvariantCultureIgnoreCase);
+			}
+			public int GetHashCode(string obj) {
+				return obj.GetHashCode();
+			}
+
 		}
 
 	}
