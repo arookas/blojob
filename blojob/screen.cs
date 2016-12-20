@@ -12,6 +12,7 @@ namespace arookas {
 		protected bloColor mTintColor;
 
 		public bloScreen() {
+			mTintColor = new bloColor(bloColor.cZero);
 			mVisible = true;
 			mAlpha = 255;
 		}

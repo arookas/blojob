@@ -19,6 +19,8 @@ namespace arookas {
 
 		public bloPicture() {
 			mColors = new bloColor[4];
+			mFromColor = new bloColor(bloColor.cZero);
+			mToColor = new bloColor(bloColor.cOne);
 		}
 
 		protected override void loadCompact(aBinaryReader reader) {
@@ -40,7 +42,7 @@ namespace arookas {
 			reader.Skip(4);
 
 			for (int i = 0; i < 4; ++i) {
-				mColors[i].rgba = bloColor.cWhite;
+				mColors[i] = new bloColor(bloColor.cWhite);
 			}
 		}
 		protected override void loadBlo1(aBinaryReader reader) {
