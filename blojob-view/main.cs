@@ -10,6 +10,11 @@ namespace arookas {
 			var cmd = new aCommandLine(args);
 
 			Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
+
+			if (cmd.Count == 0) {
+				Console.WriteLine("Usage: blojob-view.exe <input> [<format> [<search path> [...]]]");
+				return;
+			}
 			
 			string input = Path.GetFullPath(cmd[0].Name);
 			string path = Path.GetDirectoryName(Path.GetFullPath(input));
