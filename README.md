@@ -1,5 +1,5 @@
 
-## blojob v.0.1.0
+## blojob v.0.2.0
 
 ### Summary
 
