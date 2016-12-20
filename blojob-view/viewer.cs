@@ -20,7 +20,7 @@ namespace arookas {
 		public bloViewer(string input, bloFormat format) {
 			mInput = input;
 			mFormat = format;
-			Title = String.Format("blojob v{0} - {1}", blojob.getVersion(), Path.GetFileName(mInput));
+			Title = String.Format("blojob-view v{0} - {1}", blojob.getVersion(), Path.GetFileName(mInput));
 			initScreen();
 			initSize();
 			initContext();
