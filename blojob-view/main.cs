@@ -9,6 +9,7 @@ namespace arookas {
 		static void Main(string[] args) {
 			var cmd = new aCommandLine(args);
 
+			Console.Title = String.Format("blojob-view v{0}", blojob.getVersion());
 			Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
 
 			if (cmd.Count == 0) {
