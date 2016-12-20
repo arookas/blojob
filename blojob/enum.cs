@@ -3,12 +3,12 @@ using System;
 
 namespace arookas {
 
-	enum bloFormat {
+	public enum bloFormat {
 		Compact,
 		Blo1,
 	}
 
-	enum bloAnchor {
+	public enum bloAnchor {
 		TopLeft,
 		TopMiddle,
 		TopRight,
@@ -23,39 +23,39 @@ namespace arookas {
 	}
 
 	[Flags]
-	enum bloBinding {
+	public enum bloBinding {
 		Bottom = (1 << 0),
 		Top = (1 << 1),
 		Right = (1 << 2),
 		Left = (1 << 3),
 	}
 
-	enum bloTextboxHBinding {
+	public enum bloTextboxHBinding {
 		Center,
 		Right,
 		Left,
 	}
 
-	enum bloTextboxVBinding {
+	public enum bloTextboxVBinding {
 		Center,
 		Bottom,
 		Top,
 	}
 
 	[Flags]
-	enum bloMirror {
+	public enum bloMirror {
 		Y = (1 << 0),
 		X = (1 << 1),
 	}
 
-	enum bloWrapMode {
+	public enum bloWrapMode {
 		None,
 		Clamp,
 		Repeat,
 		Mirror,
 	}
 
-	enum gxTextureFilter {
+	public enum gxTextureFilter {
 		Near,
 		Linear,
 		NearMipNear,
@@ -64,7 +64,7 @@ namespace arookas {
 		LinearMipLinear,
 	}
 
-	enum gxTextureFormat {
+	public enum gxTextureFormat {
 		I4 = 0,
 		I8 = 1,
 		IA4 = 2,
@@ -78,39 +78,39 @@ namespace arookas {
 		CMPR = 14,
 	}
 
-	enum gxTlutFormat {
+	public enum gxTlutFormat {
 		IA8,
 		RGB565,
 		RGB5A3,
 	}
 
-	enum gxCullMode {
+	public enum gxCullMode {
 		None,
 		Front,
 		Back,
 		All,
 	}
 
-	enum gxWrapMode {
+	public enum gxWrapMode {
 		Clamp,
 		Repeat,
 		Mirror,
 	}
 
-	enum gxAnisotropy {
+	public enum gxAnisotropy {
 		Aniso1,
 		Aniso2,
 		Aniso4,
 	}
 
 	[Flags]
-	enum bloRenderFlags {
+	public enum bloRenderFlags {
 		ShowInvisible = (1 << 0),
 		PaneWireframe = (1 << 1),
 		PictureWireframe = (1 << 2),
 	}
 
-	static class bloEnum {
+	public static class bloEnum {
 
 		public static bool hasFlag(this bloBinding value, bloBinding flag) {
 			return ((value & flag) == flag);

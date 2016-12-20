@@ -3,7 +3,8 @@ using System.Drawing;
 using OpenTK;
 
 namespace arookas {
-	struct bloRectangle {
+
+	public struct bloRectangle {
 
 		public int left;
 		public int top;
@@ -121,4 +122,5 @@ namespace arookas {
 		}
 
 	}
+
 }

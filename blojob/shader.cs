@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace arookas {
 
-	class glProgram : IEnumerable<glShader>, IDisposable {
+	public class glProgram : IEnumerable<glShader>, IDisposable {
 
 		int mId;
 		List<glShader> mShaders;
@@ -88,7 +88,7 @@ namespace arookas {
 
 	}
 
-	class glShader {
+	public class glShader {
 
 		int mId;
 		ShaderType mShaderType;

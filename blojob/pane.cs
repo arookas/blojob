@@ -1,16 +1,15 @@
 ﻿
 using arookas.IO.Binary;
-using arookas.Math;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace arookas {
 
-	class bloPane : IEnumerable<bloPane> {
+	public class bloPane : IEnumerable<bloPane> {
 
 		protected bloPane mParent;
 		protected List<bloPane> mChildren;
@@ -240,24 +239,33 @@ namespace arookas {
 		}
 
 		public void draw() {
-			if ((!mVisible && !gl.hasRenderFlags(bloRenderFlags.ShowInvisible)) || mRect.isEmpty()) {
+			var context = bloContext.getContext();
+
+			if ((!mVisible && !context.hasRenderFlags(bloRenderFlags.ShowInvisible)) || mRect.isEmpty()) {
 				return;
 			}
+
 			GL.PushMatrix();
 			setMatrix();
 			setAlpha();
 			gl.setCullMode(gxCullMode.None);
 			drawSelf();
+
 			foreach (var child in mChildren) {
 				child.draw();
 			}
+
 			GL.PopMatrix();
 		}
 		protected virtual void drawSelf() {
-			if (!gl.hasRenderFlags(bloRenderFlags.PaneWireframe)) {
+			var context = bloContext.getContext();
+
+			if (!context.hasRenderFlags(bloRenderFlags.PaneWireframe)) {
 				return;
 			}
+
 			GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
+
 			GL.Begin(PrimitiveType.Quads);
 			GL.Color4(Color4.White);
 			GL.Vertex3(mRect.left, mRect.top, 0.0d);
@@ -268,6 +276,7 @@ namespace arookas {
 			GL.Color4(Color4.White);
 			GL.Vertex3(mRect.left, mRect.bottom, 0.0d);
 			GL.End();
+
 			GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 		}
 

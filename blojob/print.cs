@@ -4,7 +4,7 @@ using System;
 
 namespace arookas {
 
-	class bloPrint {
+	public class bloPrint {
 
 		bloFont mFont;
 		PrintState mState, mWorkState;

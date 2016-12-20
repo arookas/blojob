@@ -1,12 +1,12 @@
 ﻿
 using arookas.IO.Binary;
-using System;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using System;
 
 namespace arookas {
 
-	class bloPicture : bloPane {
+	public class bloPicture : bloPane {
 
 		protected bloTexture mTexture;
 		protected bloPalette mPalette;
@@ -24,8 +24,10 @@ namespace arookas {
 		protected override void loadCompact(aBinaryReader reader) {
 			base.loadCompact(reader);
 
-			mTexture = blojob.sResourceFinder.find<bloTexture>(reader, "timg");
-			mPalette = blojob.sResourceFinder.find<bloPalette>(reader, "tlut");
+			var finder = bloResourceFinder.getFinder();
+
+			mTexture = finder.find<bloTexture>(reader, "timg");
+			mPalette = finder.find<bloPalette>(reader, "tlut");
 
 			mBinding = (bloBinding)reader.Read8();
 			
@@ -44,9 +46,11 @@ namespace arookas {
 		protected override void loadBlo1(aBinaryReader reader) {
 			base.loadBlo1(reader);
 
+			var finder = bloResourceFinder.getFinder();
+
 			int numparams = reader.Read8();
-			mTexture = blojob.sResourceFinder.find<bloTexture>(reader, "timg");
-			mPalette = blojob.sResourceFinder.find<bloPalette>(reader, "tlut");
+			mTexture = finder.find<bloTexture>(reader, "timg");
+			mPalette = finder.find<bloPalette>(reader, "tlut");
 			mBinding = (bloBinding)reader.Read8();
 
 			numparams -= 3;
@@ -175,7 +179,9 @@ namespace arookas {
 		}
 
 		protected override void drawSelf() {
-			if (gl.hasRenderFlags(bloRenderFlags.PictureWireframe)) {
+			var context = bloContext.getContext();
+
+			if (context.hasRenderFlags(bloRenderFlags.PictureWireframe)) {
 				GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
 
 				var rect = new bloRectangle(0, 0, mRect.width, mRect.height);
@@ -322,15 +328,17 @@ namespace arookas {
 				mFromColor.rgba != bloColor.cZero ||
 				mToColor.rgba != bloColor.cOne
 			);
+
+			var context = bloContext.getContext();
 			
 			if (gradient) {
-				gl.useProgram();
-				gl.setProgramColor("fromColor", mFromColor);
-				gl.setProgramColor("toColor", mToColor);
+				context.useProgram();
+				context.setProgramColor("fromColor", mFromColor);
+				context.setProgramColor("toColor", mToColor);
 
 				// if transparency is disabled on the texture, the alpha channel is then
 				// blended to TEVREG2, which is hardcoded to store an opaque white color
-				gl.setProgramInt("transparency", mTexture.getTransparency());
+				context.setProgramInt("transparency", mTexture.getTransparency());
 			}
 
 			bloRectangle rect = new bloRectangle(x, y, (x + width), (y + height));
@@ -363,7 +371,7 @@ namespace arookas {
 			}
 
 			if (gradient) {
-				gl.unuseProgram();
+				context.unuseProgram();
 			}
 
 		}

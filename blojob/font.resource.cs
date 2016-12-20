@@ -8,7 +8,7 @@ using System.IO;
 
 namespace arookas {
 
-	class bloResFont : bloFont {
+	public class bloResFont : bloFont {
 
 		FontBlock mFontHeader;
 		InfoBlock mInfoBlock;
@@ -253,11 +253,13 @@ namespace arookas {
 
 		public override double drawChar(double x, double y, double width, double height, int character, bool monospace) {
 
+			var context = bloContext.getContext();
+
 			if (mGradient) {
-				gl.useProgram();
-				gl.setProgramColor("fromColor", mFromColor);
-				gl.setProgramColor("toColor", mToColor);
-				gl.setProgramInt("transparency", 1);
+				context.useProgram();
+				context.setProgramColor("fromColor", mFromColor);
+				context.setProgramColor("toColor", mToColor);
+				context.setProgramInt("transparency", 1);
 			}
 
 			WidthEntry widthEntry;
@@ -307,7 +309,7 @@ namespace arookas {
 			GL.End();
 
 			if (mGradient) {
-				gl.unuseProgram();
+				context.unuseProgram();
 			}
 
 			return totalWidth;

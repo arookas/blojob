@@ -6,7 +6,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace arookas {
 
-	class bloWindow : bloPane {
+	public class bloWindow : bloPane {
 
 		protected bloRectangle mContentRect;
 		protected bloPalette mPalette;
@@ -49,6 +49,8 @@ namespace arookas {
 		protected override void loadCompact(aBinaryReader reader) {
 			base.loadCompact(reader);
 
+			var finder = bloResourceFinder.getFinder();
+
 			int x = reader.Read16();
 			int y = reader.Read16();
 			int width = reader.Read16();
@@ -56,9 +58,9 @@ namespace arookas {
 			mContentRect.set(x, y, (x + width), (y + height));
 
 			for (int i = 0; i < 4; ++i) {
-				mTextures[i].texture = blojob.sResourceFinder.find<bloTexture>(reader, "timg");
+				mTextures[i].texture = finder.find<bloTexture>(reader, "timg");
 			}
-			mPalette = blojob.sResourceFinder.find<bloPalette>(reader, "tlut");
+			mPalette = finder.find<bloPalette>(reader, "tlut");
 
 			int bits = reader.Read8();
 			for (int i = 0; i < 4; ++i) {
@@ -79,6 +81,8 @@ namespace arookas {
 		protected override void loadBlo1(aBinaryReader reader) {
 			base.loadBlo1(reader);
 
+			var finder = bloResourceFinder.getFinder();
+
 			int numparams = reader.Read8();
 
 			int x = reader.Read16();
@@ -89,12 +93,12 @@ namespace arookas {
 
 			mTextured = true;
 			for (int i = 0; i < 4; ++i) {
-				mTextures[i].texture = blojob.sResourceFinder.find<bloTexture>(reader, "timg");
+				mTextures[i].texture = finder.find<bloTexture>(reader, "timg");
 				if (mTextures[i].texture == null) {
 					mTextured = false;
 				}
 			}
-			mPalette = blojob.sResourceFinder.find<bloPalette>(reader, "tlut");
+			mPalette = finder.find<bloPalette>(reader, "tlut");
 
 			int bits = reader.Read8();
 			for (int i = 0; i < 4; ++i) {
@@ -108,7 +112,7 @@ namespace arookas {
 			numparams -= 14;
 
 			if (numparams > 0) {
-				mContentTexture = blojob.sResourceFinder.find<bloTexture>(reader, "timg");
+				mContentTexture = finder.find<bloTexture>(reader, "timg");
 				--numparams;
 			} else {
 				mContentTexture = null;
@@ -370,11 +374,13 @@ namespace arookas {
 					toColor.rgba != bloColor.cOne
 				);
 
+				var context = bloContext.getContext();
+
 				if (gradient) {
-					gl.useProgram();
-					gl.setProgramColor("fromColor", fromColor);
-					gl.setProgramColor("toColor", toColor);
-					gl.setProgramInt("transparency", texture.getTransparency());
+					context.useProgram();
+					context.setProgramColor("fromColor", fromColor);
+					context.setProgramColor("toColor", toColor);
+					context.setProgramInt("transparency", texture.getTransparency());
 				}
 
 				int left = x;
@@ -403,7 +409,7 @@ namespace arookas {
 				GL.End();
 
 				if (gradient) {
-					gl.unuseProgram();
+					context.unuseProgram();
 				}
 
 			}

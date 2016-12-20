@@ -6,10 +6,14 @@ using System.IO;
 
 namespace arookas {
 
-	abstract class bloResource {
+	public abstract class bloResource {
 
 		protected bloResourceType mResourceType;
 		protected string mResourcePath, mResourceAbsPath;
+
+		protected bloResource() {
+			// empty
+		}
 
 		public abstract void load(Stream stream);
 
@@ -55,8 +59,8 @@ namespace arookas {
 		}
 
 	}
-	
-	enum bloResourceType {
+
+	public enum bloResourceType {
 		None, // null reference
 		Unknown, // not used by SMS
 		LocalDirectory, // resource is in the specified directory of the specified archive
@@ -64,7 +68,7 @@ namespace arookas {
 		Global, // resource may be found in any loaded global resource
 	}
 
-	class bloResourceFinder {
+	public class bloResourceFinder {
 
 		string mLocalPath;
 		List<string> mGlobalPaths;
@@ -131,6 +135,17 @@ namespace arookas {
 				Console.WriteLine(">>> FAILED: could not find {0} resource '{1}' at 0x{2:X}.", type, name, start);
 			}
 			return resource;
+		}
+
+		static bloResourceFinder sInstance;
+
+		public static bloResourceFinder getFinder() {
+			return sInstance;
+		}
+		public static bloResourceFinder setFinder(bloResourceFinder finder) {
+			bloResourceFinder old = sInstance;
+			sInstance = finder;
+			return old;
 		}
 
 	}

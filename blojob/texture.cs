@@ -6,7 +6,7 @@ using System.IO;
 
 namespace arookas {
 
-	class bloTexture : bloResource {
+	public class bloTexture : bloResource {
 
 		protected gxTextureFormat mFormat;
 		protected int mTransparency; // quick "does this texture have alpha" lookup

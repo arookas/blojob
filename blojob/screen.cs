@@ -7,7 +7,7 @@ using System.Text;
 
 namespace arookas {
 
-	class bloScreen : bloPane {
+	public class bloScreen : bloPane {
 		
 		protected bloColor mTintColor;
 

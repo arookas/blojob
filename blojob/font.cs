@@ -5,13 +5,13 @@ using System.Text;
 
 namespace arookas {
 
-	enum bloFontType {
+	public enum bloFontType {
 		Font8Bit, // 8-bit [00-FF] range
 		Font16Bit, // 16-bit [0000-FFFF] range
 		FontSJIS, // 8-bit [00-7F] range + 16-bit [8000-FFFF] range
 	}
 
-	abstract class bloFont : bloResource {
+	public abstract class bloFont : bloResource {
 
 		protected bool mMonoFlag;
 		protected int mMonoWidth;

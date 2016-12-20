@@ -1,6 +1,7 @@
 workspace "blojob"
 	configurations { "Debug", "Release" }
 	targetdir "bin/%{cfg.buildcfg}"
+	startproject "blojob-view"
 	
 	filter "configurations:Debug"
 		defines { "DEBUG" }
@@ -11,10 +12,11 @@ workspace "blojob"
 		optimize "On"
 	
 	project "blojob"
-		kind "ConsoleApp"
+		kind "SharedLib"
 		language "C#"
 		namespace "arookas"
 		location "blojob"
+		entrypoint "arookas.blojobView"
 		
 		links { "arookas", "OpenTK", "System", "System.Drawing" }
 		
@@ -34,3 +36,20 @@ workspace "blojob"
 		
 		filter "files:**.fp"
 			buildaction "Copy"
+		
+	project "blojob-view"
+		kind "ConsoleApp"
+		language "C#"
+		namespace "arookas"
+		location "blojob-view"
+		
+		links { "arookas", "blojob", "OpenTK", "System", "System.Drawing" }
+		
+		files {
+			"blojob-view/**.cs",
+		}
+		
+		excludes {
+			"blojob-view/bin/**",
+			"blojob-view/obj/**",
+		}

@@ -5,7 +5,7 @@ using System.IO;
 
 namespace arookas {
 
-	class bloPalette : bloResource {
+	public class bloPalette : bloResource {
 
 		protected gxTlutFormat mFormat;
 		protected int mTransparency;

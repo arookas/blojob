@@ -1,6 +1,7 @@
 ﻿
 namespace arookas {
-	struct bloPoint {
+	
+	public struct bloPoint {
 
 		public int x;
 		public int y;
@@ -11,4 +12,5 @@ namespace arookas {
 		}
 
 	}
+
 }

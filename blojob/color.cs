@@ -3,7 +3,7 @@ using OpenTK.Graphics;
 
 namespace arookas {
 
-	struct bloColor {
+	public struct bloColor {
 
 		public int r, g, b, a;
 

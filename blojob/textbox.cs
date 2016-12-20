@@ -3,7 +3,7 @@ using arookas.IO.Binary;
 
 namespace arookas {
 
-	class bloTextbox : bloPane {
+	public class bloTextbox : bloPane {
 
 		protected bloFont mFont;
 		protected ushort[] mText;
@@ -25,9 +25,11 @@ namespace arookas {
 		protected override void loadBlo1(aBinaryReader reader) {
 			base.loadBlo1(reader);
 
+			var finder = bloResourceFinder.getFinder();
+
 			int numparams = reader.Read8();
-			
-			mFont = blojob.sResourceFinder.find<bloResFont>(reader, "font");
+
+			mFont = finder.find<bloResFont>(reader, "font");
 			
 			mTopColor = new bloColor(reader.Read32());
 			mBottomColor = new bloColor(reader.Read32());
