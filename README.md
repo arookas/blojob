@@ -27,15 +27,15 @@ Simply run the script with premake5 and build the resulting solution.
 
 ### Usage
 
-Once built, _blojob_ contains a viewer program (blojob-view.exe) and a shared library file (blojob.dll).
+Once built, there will be a viewer program, _pablo_, and a shared library, _blojob_.
 
-#### Viewer
+#### pablo
 
-The viewer has a very simple command-line interface allowing drag-and-drop usage, as well as direct command-prompt usage for more configuration.
+The viewer, _pablo_, has a very simple command-line interface allowing drag-and-drop usage, as well as direct command-prompt usage for more configuration.
 The parameters are as follows:
 
 ```
-blojob-view.exe <input-file> [<format> [<search-path> [...]]]
+pablo <input-file> [<format> [<search-path> [...]]]
 ```
 
 |Parameter|Description|
