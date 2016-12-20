@@ -17,7 +17,6 @@ workspace "blojob"
 		language "C#"
 		namespace "arookas"
 		location "blojob"
-		entrypoint "arookas.pablo"
 		
 		links { "arookas", "OpenTK", "System", "System.Drawing" }
 		
@@ -43,6 +42,7 @@ workspace "blojob"
 		language "C#"
 		namespace "arookas"
 		location "blojob-view"
+		entrypoint "arookas.pablo"
 		targetname "pablo"
 		
 		links { "arookas", "blojob", "OpenTK", "System", "System.Drawing" }
