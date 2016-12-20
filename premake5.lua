@@ -1,7 +1,8 @@
+
 workspace "blojob"
 	configurations { "Debug", "Release" }
 	targetdir "bin/%{cfg.buildcfg}"
-	startproject "blojob-view"
+	startproject "pablo"
 	
 	filter "configurations:Debug"
 		defines { "DEBUG" }
@@ -16,7 +17,7 @@ workspace "blojob"
 		language "C#"
 		namespace "arookas"
 		location "blojob"
-		entrypoint "arookas.blojobView"
+		entrypoint "arookas.pablo"
 		
 		links { "arookas", "OpenTK", "System", "System.Drawing" }
 		
@@ -37,11 +38,12 @@ workspace "blojob"
 		filter "files:**.fp"
 			buildaction "Copy"
 		
-	project "blojob-view"
+	project "pablo"
 		kind "ConsoleApp"
 		language "C#"
 		namespace "arookas"
 		location "blojob-view"
+		targetname "pablo"
 		
 		links { "arookas", "blojob", "OpenTK", "System", "System.Drawing" }
 		

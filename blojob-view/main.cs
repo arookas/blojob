@@ -4,16 +4,16 @@ using System.IO;
 
 namespace arookas {
 
-	static class blojobView {
+	static class pablo {
 
 		static void Main(string[] args) {
 			var cmd = new aCommandLine(args);
 
-			Console.Title = String.Format("blojob-view v{0}", blojob.getVersion());
+			Console.Title = String.Format("pablo v{0}", blojob.getVersion());
 			Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
 
 			if (cmd.Count == 0) {
-				Console.WriteLine("Usage: blojob-view.exe <input> [<format> [<search path> [...]]]");
+				Console.WriteLine("Usage: pablo.exe <input> [<format> [<search path> [...]]]");
 				return;
 			}
 			
