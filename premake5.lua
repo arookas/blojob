@@ -55,3 +55,22 @@ workspace "blojob"
 			"blojob-view/bin/**",
 			"blojob-view/obj/**",
 		}
+		
+	project "joblo"
+		kind "ConsoleApp"
+		language "C#"
+		namespace "arookas"
+		location "blojob-conv"
+		entrypoint "arookas.joblo"
+		targetname "joblo"
+		
+		links { "arookas", "blojob", "System" }
+		
+		files {
+			"blojob-conv/**.cs",
+		}
+		
+		excludes {
+			"blojob-conv/bin/**",
+			"blojob-conv/obj/**",
+		}
