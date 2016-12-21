@@ -1,8 +1,10 @@
 ﻿
 using arookas.IO.Binary;
+using arookas.Xml;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Xml;
 
 namespace arookas {
 
@@ -21,6 +23,12 @@ namespace arookas {
 			writer.Write8((byte)mResourceType);
 			writer.Write8((byte)mResourcePath.Length);
 			writer.WriteString(mResourcePath);
+		}
+		public void save(string name, XmlWriter writer) {
+			writer.WriteStartElement(name);
+			writer.WriteAttributeString("scope", mResourceType.ToString());
+			writer.WriteValue(mResourcePath);
+			writer.WriteEndElement();
 		}
 
 		public bloResourceType getResourceType() {
@@ -55,6 +63,11 @@ namespace arookas {
 			} else {
 				writer.Write8(0);
 				writer.Write8(0);
+			}
+		}
+		public static void save(bloResource resource, string name, XmlWriter writer) {
+			if (resource != null) {
+				resource.save(name, writer);
 			}
 		}
 
@@ -104,11 +117,41 @@ namespace arookas {
 		}
 		public T find<T>(aBinaryReader reader, string directory, out bloResourceType type)
 			where T : bloResource, new() {
-			long start = reader.Position;
 			type = (bloResourceType)reader.Read8();
 			int length = reader.Read8();
 			string name = reader.ReadString(length);
+			T resource = find<T>(type, name, directory);
+			if (resource == null && type != bloResourceType.None) {
+				Console.WriteLine(">>> FAILED: could not find {0} resource '{1}'", type, name);
+			}
+			return resource;
+		}
 
+		public T find<T>(xElement element, string directory)
+			where T : bloResource, new() {
+			bloResourceType type;
+			return find<T>(element, directory, out type);
+		}
+		public T find<T>(xElement element, string directory, out bloResourceType type)
+			where T : bloResource, new() {
+			type = bloResourceType.None;
+			if (element == null) {
+				return null;
+			}
+			var attr = element.Attribute("scope");
+			if (attr == null || !Enum.TryParse<bloResourceType>(attr, true, out type)) {
+				type = bloResourceType.LocalDirectory;
+			}
+			string name = element.Value;
+			T resource = find<T>(type, name, directory);
+			if (resource == null && type != bloResourceType.None) {
+				Console.WriteLine(">>> FAILED: could not find {0} resource '{1}'", type, name);
+			}
+			return resource;
+		}
+
+		T find<T>(bloResourceType type, string name, string directory)
+			where T : bloResource, new() {
 			string path = null;
 			switch (type) {
 				case bloResourceType.LocalDirectory: {
@@ -144,9 +187,6 @@ namespace arookas {
 				using (Stream stream = File.OpenRead(path)) {
 					resource.load(stream);
 				}
-			}
-			if (resource == null && type != bloResourceType.None) {
-				Console.WriteLine(">>> FAILED: could not find {0} resource '{1}' at 0x{2:X}.", type, name, start);
 			}
 			if (path != null && resource != null) {
 				mCache[path] = resource;
