@@ -84,20 +84,7 @@ namespace arookas {
 		}
 		public ushort[] encode(Encoding encoding, string format, params object[] args) {
 			if (encoding == null) {
-				switch (getFontType()) {
-					case bloFontType.Font8Bit: {
-						encoding = Encoding.GetEncoding(1252); // Latin-1 / ISO-8859-1
-						break;
-					}
-					case bloFontType.Font16Bit: {
-						encoding = Encoding.BigEndianUnicode; // BE UTF-16
-						break;
-					}
-					case bloFontType.FontSJIS: {
-						encoding = Encoding.GetEncoding(932); // S-JIS
-						break;
-					}
-				}
+				encoding = getEncoding();
 			}
 			var text = String.Format(format, args);
 			var encoded = encoding.GetBytes(text);
@@ -152,21 +139,20 @@ namespace arookas {
 		}
 		public string decodeToUtf16(ushort[] buffer) {
 			var decoded = decodeToBytes(buffer);
-			switch (getFontType()) {
-				case bloFontType.Font8Bit: {
-					var encoding = Encoding.GetEncoding(1252);
-					return encoding.GetString(decoded);
-				}
-				case bloFontType.Font16Bit: {
-					var encoding = Encoding.BigEndianUnicode;
-					return encoding.GetString(decoded);
-				}
-				case bloFontType.FontSJIS: {
-					var encoding = Encoding.GetEncoding(932);
-					return encoding.GetString(decoded);
-				}
+			var encoding = getEncoding();
+			if (encoding == null) {
+				return "";
 			}
-			return "";
+			return encoding.GetString(decoded);
+		}
+
+		public Encoding getEncoding() {
+			switch (getFontType()) {
+				case bloFontType.Font8Bit: return Encoding.GetEncoding(1252);
+				case bloFontType.Font16Bit: return Encoding.BigEndianUnicode;
+				case bloFontType.FontSJIS: return Encoding.GetEncoding(932);
+			}
+			return null;
 		}
 
 		protected static bool isLeadByte_1Byte(int character) {
