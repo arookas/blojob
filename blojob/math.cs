@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace arookas {
 
 	static class bloMath {
@@ -15,6 +17,15 @@ namespace arookas {
 		}
 		public static int round(double x) {
 			return (int)(x + 0.5d);
+		}
+		public static T clamp<T>(T x, T min, T max)
+			where T : IComparable {
+			if (x.CompareTo(min) < 0) {
+				return min;
+			} else if (x.CompareTo(max) > 0) {
+				return max;
+			}
+			return x;
 		}
 
 	}
