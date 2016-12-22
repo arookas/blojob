@@ -68,6 +68,7 @@ namespace arookas {
 			using (var stream = File.Create(outputfile)) {
 				switch (outputformat) {
 					case bloFormat.Blo1: screen.saveBlo1(stream); break;
+					case bloFormat.Xml: screen.saveXml(stream); break;
 					default: {
 						Console.WriteLine("Unimplemented output format {0}", outputformat);
 						return 1;
@@ -80,7 +81,7 @@ namespace arookas {
 		}
 
 		static string[] sFormatNames = {
-			"compact", "blo1",
+			"compact", "blo1", "xml"
 		};
 
 		static bloFormat parseFormat(string text) {

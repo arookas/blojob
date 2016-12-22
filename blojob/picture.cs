@@ -3,6 +3,7 @@ using arookas.IO.Binary;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System;
+using System.Xml;
 
 namespace arookas {
 
@@ -171,6 +172,48 @@ namespace arookas {
 			}
 
 			writer.WritePadding(4, 0);
+		}
+		public override void saveXml(XmlWriter writer) {
+			base.saveXml(writer);
+
+			bloResource.save(mTexture, "texture", writer);
+			bloResource.save(mPalette, "palette", writer);
+			writer.WriteElementString("binding", mBinding.ToString());
+
+			if (mMirror != 0) {
+				writer.WriteElementString("mirror", mMirror.ToString());
+			}
+
+			if (mRotate90) {
+				writer.WriteElementString("rotate-90", mRotate90.ToString());
+			}
+
+			if (mWrapS != bloWrapMode.None) {
+				writer.WriteElementString("wrap-s", mWrapS.ToString());
+			}
+
+			if (mWrapT != bloWrapMode.None) {
+				writer.WriteElementString("wrap-t", mWrapT.ToString());
+			}
+
+			bloXml.saveGradient(writer, mFromColor, mToColor, "gradient");
+
+			var saveColors = false;
+			for (int i = 0; i < 4; ++i) {
+				if (mColors[i].rgba != bloColor.cWhite) {
+					saveColors = true;
+					break;
+				}
+			}
+
+			if (saveColors) {
+				writer.WriteStartElement("colors");
+				bloXml.saveColor(writer, mColors[cTopLeft], "top-left");
+				bloXml.saveColor(writer, mColors[cTopRight], "top-right");
+				bloXml.saveColor(writer, mColors[cBottomLeft], "bottom-left");
+				bloXml.saveColor(writer, mColors[cBottomRight], "bottom-right");
+				writer.WriteEndElement();
+			}
 		}
 
 		protected override void loadGLSelf() {

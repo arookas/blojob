@@ -1,5 +1,6 @@
 ﻿
 using arookas.IO.Binary;
+using System.Xml;
 
 namespace arookas {
 
@@ -167,6 +168,30 @@ namespace arookas {
 			}
 
 			writer.WritePadding(4, 0);
+		}
+		public override void saveXml(XmlWriter writer) {
+			base.saveXml(writer);
+
+			bloResource.save(mFont, "font", writer);
+
+			writer.WriteStartElement("colors");
+			bloXml.saveColor(writer, mTopColor, "top");
+			bloXml.saveColor(writer, mBottomColor, "bottom");
+			writer.WriteEndElement();
+
+			writer.WriteStartElement("binding");
+			writer.WriteElementString("horizontal", mHBinding.ToString());
+			writer.WriteElementString("vertical", mVBinding.ToString());
+			writer.WriteEndElement();
+
+			writer.WriteStartElement("typesetting");
+			writer.WriteElementString("spacing", mFontSpacing.ToString());
+			writer.WriteElementString("leading", mFontLeading.ToString());
+			writer.WriteElementString("width", mFontWidth.ToString());
+			writer.WriteElementString("height", mFontHeight.ToString());
+			writer.WriteEndElement();
+
+			bloXml.saveGradient(writer, mFromColor, mToColor, "gradient");
 		}
 
 		protected override void loadGLSelf() {

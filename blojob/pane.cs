@@ -6,6 +6,7 @@ using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
 
 namespace arookas {
 
@@ -164,6 +165,40 @@ namespace arookas {
 			}
 
 			writer.WritePadding(4, 0);
+		}
+		public virtual void saveXml(XmlWriter writer) {
+			if (writer == null) {
+				throw new ArgumentNullException("writer");
+			}
+
+			if (mName != 0u) {
+				writer.WriteAttributeString("name", mName.ToString("X8")); // TODO: write as text
+			}
+			
+			if (mConnectParent) {
+				writer.WriteAttributeString("connect", mConnectParent.ToString());
+			}
+
+			if (!mVisible) {
+				writer.WriteAttributeString("visible", mVisible.ToString());
+			}
+
+			bloXml.saveRectangle(writer, mRect, "rectangle");
+
+			if (mAngle != 0.0d) {
+				writer.WriteElementString("angle", ((ushort)mAngle).ToString());
+			}
+
+			if (mAnchor != bloAnchor.TopLeft) {
+				writer.WriteElementString("anchor", mAnchor.ToString());
+			}
+
+			if (mAlpha != 255 || !mInheritAlpha) {
+				writer.WriteStartElement("alpha");
+				writer.WriteAttributeString("inherit", mInheritAlpha.ToString());
+				writer.WriteValue(mAlpha);
+				writer.WriteEndElement();
+			}
 		}
 		
 		public void move(bloPoint point) {

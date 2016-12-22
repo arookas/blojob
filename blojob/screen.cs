@@ -4,6 +4,7 @@ using OpenTK.Graphics.OpenGL;
 using System;
 using System.IO;
 using System.Text;
+using System.Xml;
 
 namespace arookas {
 
@@ -251,6 +252,59 @@ namespace arookas {
 				writer.Write32(0x8u);
 				++blockcount;
 			}
+		}
+
+		public void saveXml(Stream stream) {
+			var settings = new XmlWriterSettings();
+			settings.CloseOutput = false;
+			settings.Encoding = Encoding.UTF8;
+			settings.Indent = true;
+			settings.IndentChars = "\t";
+			settings.NewLineChars = "\n\r";
+
+			var writer = XmlWriter.Create(stream, settings);
+
+			writer.WriteStartDocument();
+
+			writer.WriteStartElement("screen");
+			writer.WriteStartElement("info");
+			writer.WriteElementString("width", mRect.width.ToString());
+			writer.WriteElementString("height", mRect.height.ToString());
+			bloXml.saveColor(writer, mTintColor, "tint-color");
+			writer.WriteEndElement();
+
+			writer.WriteStartElement("search-paths");
+			writer.WriteComment("Enter global search paths here.");
+			writer.WriteEndElement();
+
+			foreach (var childpane in this) {
+				saveXml(childpane, writer);
+			}
+
+			writer.WriteEndElement();
+			writer.WriteEndDocument();
+			writer.Close();
+		}
+		void saveXml(bloPane pane, XmlWriter writer) {
+			var typeID = "pane";
+
+			if (pane is bloTextbox) {
+				typeID = "textbox";
+			} else if (pane is bloWindow) {
+				typeID = "window";
+			} else if (pane is bloPicture) {
+				typeID = "picture";
+			}
+
+			writer.WriteStartElement(typeID);
+			pane.saveXml(writer);
+			if (pane.getChildPane() > 0) {
+				writer.WriteComment("children");
+				foreach (var childpane in pane) {
+					saveXml(childpane, writer);
+				}
+			}
+			writer.WriteEndElement();
 		}
 
 		protected override void drawSelf() {

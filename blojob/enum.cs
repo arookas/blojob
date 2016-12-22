@@ -6,6 +6,7 @@ namespace arookas {
 	public enum bloFormat {
 		Compact,
 		Blo1,
+		Xml,
 	}
 
 	public enum bloAnchor {
