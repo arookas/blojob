@@ -172,7 +172,7 @@ namespace arookas {
 			}
 
 			if (mName != 0u) {
-				writer.WriteAttributeString("name", mName.ToString("X8")); // TODO: write as text
+				writer.WriteAttributeString("id", convertNameToString(mName));
 			}
 			
 			if (mConnectParent) {
@@ -425,6 +425,41 @@ namespace arookas {
 		}
 		IEnumerator IEnumerable.GetEnumerator() {
 			return GetEnumerator();
+		}
+
+		internal static uint convertStringToName(string str) {
+			var name = 0u;
+			for (int i = 0; i < str.Length; ++i) {
+				name <<= 8;
+				name |= (uint)(str[i] & 255);
+			}
+			return name;
+		}
+		internal static string convertNameToString(uint name) {
+			if (name > 0xFFFFFFu) {
+				var chars = new char[4];
+				chars[0] = (char)((name >> 24) & 255);
+				chars[1] = (char)((name >> 16) & 255);
+				chars[2] = (char)((name >> 8) & 255);
+				chars[3] = (char)((name >> 0) & 255);
+				return new String(chars);
+			} else if (name > 0xFFFFu) {
+				var chars = new char[3];
+				chars[0] = (char)((name >> 16) & 255);
+				chars[1] = (char)((name >> 8) & 255);
+				chars[2] = (char)((name >> 0) & 255);
+				return new String(chars);
+			} else if (name > 0xFFu) {
+				var chars = new char[2];
+				chars[0] = (char)((name >> 8) & 255);
+				chars[1] = (char)((name >> 0) & 255);
+				return new String(chars);
+			} else if (name > 0u) {
+				var chars = new char[1];
+				chars[0] = (char)((name >> 0) & 255);
+				return new String(chars);
+			}
+			return "";
 		}
 
 	}
