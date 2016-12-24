@@ -53,6 +53,7 @@ namespace arookas {
 				switch (inputformat) {
 					case bloFormat.Compact: screen = bloScreen.loadCompact(stream); break;
 					case bloFormat.Blo1: screen = bloScreen.loadBlo1(stream); break;
+					case bloFormat.Xml: screen = bloScreen.loadXml(stream); break;
 					default: {
 						Console.WriteLine("Unimplemented input format {0}", inputformat);
 						return 1;
