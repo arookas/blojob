@@ -37,18 +37,18 @@ Once built, there will be a several executables:
 
 #### pablo
 
-The viewer, _pablo_, has a very simple command-line interface allowing drag-and-drop usage, as well as direct command-prompt usage for more configuration.
+The viewer, _pablo_, has a very simple command-line interface allowing drag&#8209;and&#8209;drop usage, as well as direct command&#8209;prompt usage for more configuration.
 The parameters are as follows:
 
 ```
-pablo <input-file> [<format> [<search-path> [...]]]
+pablo <input&#8209;file> [<format> [<search&#8209;path> [...]]]
 ```
 
 |Parameter|Description|
 |---------|-----------|
-|&lt;input-file&gt;|The path to the BLO file to view. This is the only required parameter, allowing drag-and-drop with default configuration. May be a relative or absolute path.|
+|&lt;input&#8209;file&gt;|The path to the BLO file to view. This is the only required parameter, allowing drag&#8209;and&#8209;drop with default configuration. May be a relative or absolute path.|
 |&lt;format&gt;|Allows you to specify the format of the input BLO file. By default, this is assumed to be the BLO1 format. The possible values are: _compact_, _blo1_, _xml_.|
-|&lt;search-path&gt;|Adds a fallback global search path to the resource finder. This is used to find texture, fonts, palettes, and other files referenced from within the BLO file. You may specify any number of search paths.|
+|&lt;search&#8209;path&gt;|Adds a fallback global search path to the resource finder. This is used to find texture, fonts, palettes, and other files referenced from within the BLO file. You may specify any number of search paths.|
 
 Once the BLO is loaded, you may use various keys to toggle certain rendering flags:
 
@@ -59,17 +59,17 @@ Once the BLO is loaded, you may use various keys to toggle certain rendering fla
 
 #### joblo
 
-The converter, _joblo_, does not support drag-and-drop usage. It takes four parameters as follows:
+The converter, _joblo_, does not support drag&#8209;and&#8209;drop usage. It takes four parameters as follows:
 
 ```
-joblo <input-file> <input-format> <output-file> <output-format>
+joblo <input&#8209;file> <input&#8209;format> <output&#8209;file> <output&#8209;format>
 ```
 
 |Parameter|Description|
 |---------|-----------|
-|&lt;input-file&gt;|The path to the BLO file to convert. May be a relative or absolute path. Must not be the same as &lt;output-file&gt;.|
-|&lt;input-format&gt;|Specifies the format of the input file. The possible values are: _compact_, _blo1_, _xml_.|
-|&lt;output-file&gt;|The path to which to save the converted BLO. May be relative or absolute. Must not be the same as &lt;input-file&gt;|
-|&lt;output-format&gt;|Specifies the format to which to convert the input file. The possible values are: _compact_, _blo1_, _xml_.|
+|&lt;input&#8209;file&gt;|The path to the BLO file to convert. May be a relative or absolute path. Must not be the same as &lt;output&#8209;file&gt;.|
+|&lt;input&#8209;format&gt;|Specifies the format of the input file. The possible values are: _compact_, _blo1_, _xml_.|
+|&lt;output&#8209;file&gt;|The path to which to save the converted BLO. May be relative or absolute. Must not be the same as &lt;input&#8209;file&gt;|
+|&lt;output&#8209;format&gt;|Specifies the format to which to convert the input file. The possible values are: _compact_, _blo1_, _xml_.|
 
-> **Note:** If both &lt;input-format&gt; and &lt;output-format&gt; are the same value, joblo performs a basic file-copy operation with no conversion performed.
+> **Note:** If both &lt;input&#8209;format&gt; and &lt;output&#8209;format&gt; are the same value, joblo performs a basic file-copy operation with no conversion performed.
