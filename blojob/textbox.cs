@@ -120,6 +120,8 @@ namespace arookas {
 
 			mFont = finder.find<bloResFont>(element.Element("font"), "font");
 
+			mText = bloXml.loadTextBuffer(element.Element("text"), mFont);
+
 			var white = new bloColor(bloColor.cWhite);
 			var colors = element.Element("colors");
 			mTopColor = bloXml.loadColor(colors.Element("top"), white);
@@ -209,6 +211,8 @@ namespace arookas {
 			base.saveXml(writer);
 
 			bloResource.save(mFont, "font", writer);
+
+			bloXml.saveTextBuffer(writer, mText, mFont, "text");
 
 			writer.WriteStartElement("colors");
 			bloXml.saveColor(writer, mTopColor, "top");
