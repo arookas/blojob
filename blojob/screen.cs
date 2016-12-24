@@ -178,7 +178,9 @@ namespace arookas {
 		}
 
 		public static bloScreen loadXml(Stream stream) {
-			var document = new xDocument(stream);
+			var settings = new XmlReaderSettings() { CheckCharacters = false };
+			var reader = XmlReader.Create(stream, settings);
+			var document = new xDocument(reader);
 			bloScreen scrn = new bloScreen();
 
 			var finder = bloResourceFinder.getFinder();
