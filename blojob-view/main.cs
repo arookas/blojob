@@ -6,6 +6,10 @@ namespace arookas {
 
 	static class pablo {
 
+		static string[] sFormatNames = {
+			"compact", "blo1", "xml"
+		};
+
 		static void Main(string[] args) {
 			var cmd = new aCommandLine(args);
 
@@ -30,12 +34,11 @@ namespace arookas {
 
 			if (cmd.Count > 1) {
 				var formatname = cmd[1].Name;
-				if (formatname.Equals("compact", StringComparison.InvariantCultureIgnoreCase)) {
-					format = bloFormat.Compact;
-				} else if (formatname.Equals("blo1", StringComparison.InvariantCultureIgnoreCase)) {
-					format = bloFormat.Blo1;
-				} else if (formatname.Equals("xml", StringComparison.InvariantCultureIgnoreCase)) {
-					format = bloFormat.Xml;
+				for (int i = 0; i < sFormatNames.Length; ++i) {
+					if (formatname.Equals(sFormatNames[i], StringComparison.InvariantCultureIgnoreCase)) {
+						format = (bloFormat)i;
+						break;
+					}
 				}
 			}
 
