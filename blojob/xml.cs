@@ -95,7 +95,7 @@ namespace arookas {
 				return;
 			}
 			writer.WriteStartElement(name);
-			writer.WriteValue(font.decodeToUtf16(buffer));
+			writer.WriteString(font.decodeToUtf16(buffer));
 			writer.WriteEndElement();
 		}
 
