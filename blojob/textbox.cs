@@ -142,10 +142,10 @@ namespace arookas {
 			int width = (mFont != null ? mFont.getWidth() : 20);
 			int height = (mFont != null ? mFont.getHeight() : 20);
 
-			mFontSpacing = (element.Element("spacing") | 0);
-			mFontLeading = (element.Element("leading") | leading);
-			mFontWidth = (element.Element("width") | width);
-			mFontHeight = (element.Element("height") | height);
+			mFontSpacing = (typesetting.Element("spacing") | 0);
+			mFontLeading = (typesetting.Element("leading") | leading);
+			mFontWidth = (typesetting.Element("width") | width);
+			mFontHeight = (typesetting.Element("height") | height);
 
 			bloXml.loadGradient(element.Element("gradient"), out mFromColor, out mToColor);
 		}
