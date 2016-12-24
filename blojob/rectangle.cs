@@ -78,8 +78,8 @@ namespace arookas {
 			move(point.x, point.y);
 		}
 		public void move(int x, int y) {
-			int width = (right - left);
-			int height = (bottom - top);
+			int width = this.width;
+			int height = this.height;
 			left = x;
 			top = y;
 			resize(width, height);
