@@ -94,12 +94,8 @@ namespace arookas {
 			int height = reader.Read16();
 			mContentRect.set(x, y, (x + width), (y + height));
 
-			mTextured = true;
 			for (int i = 0; i < 4; ++i) {
 				mTextures[i].texture = finder.find<bloTexture>(reader, "timg");
-				if (mTextures[i].texture == null) {
-					mTextured = false;
-				}
 			}
 			mPalette = finder.find<bloPalette>(reader, "tlut");
 
@@ -160,6 +156,13 @@ namespace arookas {
 			postLoad();
 		}
 		void postLoad() {
+			mTextured = true;
+			for (int i = 0; i < 4; ++i) {
+				if (mTextures[i].texture == null) {
+					mTextured = false;
+					break;
+				}
+			}
 			if (mTextured) {
 				mMinWidth = (mTextures[cTopLeft].texture.getWidth() + mTextures[cTopRight].texture.getWidth());
 				mMinHeight = (mTextures[cTopLeft].texture.getHeight() + mTextures[cBottomLeft].texture.getHeight());
