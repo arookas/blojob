@@ -34,6 +34,8 @@ namespace arookas {
 					format = bloFormat.Compact;
 				} else if (formatname.Equals("blo1", StringComparison.InvariantCultureIgnoreCase)) {
 					format = bloFormat.Blo1;
+				} else if (formatname.Equals("xml", StringComparison.InvariantCultureIgnoreCase)) {
+					format = bloFormat.Xml;
 				}
 			}
 

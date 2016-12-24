@@ -32,6 +32,7 @@ namespace arookas {
 				switch (mFormat) {
 					case bloFormat.Compact: screen = bloScreen.loadCompact(stream); break;
 					case bloFormat.Blo1: screen = bloScreen.loadBlo1(stream); break;
+					case bloFormat.Xml: screen = bloScreen.loadXml(stream); break;
 				}
 			}
 			if (screen != null) {
