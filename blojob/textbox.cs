@@ -1,5 +1,7 @@
 ﻿
 using arookas.IO.Binary;
+using arookas.Xml;
+using System;
 using System.Xml;
 
 namespace arookas {
@@ -110,6 +112,40 @@ namespace arookas {
 			}
 
 			reader.Skip(4);
+		}
+		protected override void loadXml(xElement element) {
+			base.loadXml(element);
+
+			var finder = bloResourceFinder.getFinder();
+
+			mFont = finder.find<bloResFont>(element.Element("font"), "font");
+
+			var white = new bloColor(bloColor.cWhite);
+			var colors = element.Element("colors");
+			mTopColor = bloXml.loadColor(colors.Element("top"), white);
+			mBottomColor = bloXml.loadColor(colors.Element("bottom"), white);
+
+			var binding = element.Element("binding");
+
+			if (!Enum.TryParse<bloTextboxHBinding>(binding.Element("horizontal"), true, out mHBinding)) {
+				mHBinding = bloTextboxHBinding.Left;
+			}
+
+			if (!Enum.TryParse<bloTextboxVBinding>(binding.Element("vertical"), true, out mVBinding)) {
+				mVBinding = bloTextboxVBinding.Top;
+			}
+
+			var typesetting = element.Element("typesetting");
+			int leading = (mFont != null ? mFont.getLeading() : 20);
+			int width = (mFont != null ? mFont.getWidth() : 20);
+			int height = (mFont != null ? mFont.getHeight() : 20);
+
+			mFontSpacing = (element.Element("spacing") | 0);
+			mFontLeading = (element.Element("leading") | leading);
+			mFontWidth = (element.Element("width") | width);
+			mFontHeight = (element.Element("height") | height);
+
+			bloXml.loadGradient(element.Element("gradient"), out mFromColor, out mToColor);
 		}
 
 		public override void saveBlo1(aBinaryWriter writer) {

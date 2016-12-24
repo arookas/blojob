@@ -1,5 +1,6 @@
 ﻿
 using arookas.IO.Binary;
+using arookas.Xml;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System;
@@ -102,6 +103,42 @@ namespace arookas {
 			}
 
 			reader.Skip(4);
+		}
+		protected override void loadXml(xElement element) {
+			base.loadXml(element);
+
+			var finder = bloResourceFinder.getFinder();
+
+			mTexture = finder.find<bloTexture>(element.Element("texture"), "timg");
+			mPalette = finder.find<bloPalette>(element.Element("palette"), "tlut");
+
+			if (!Enum.TryParse<bloBinding>(element.Element("binding"), true, out mBinding)) {
+				mBinding = (bloBinding.Left | bloBinding.Top | bloBinding.Right | bloBinding.Bottom);
+			}
+
+			if (!Enum.TryParse<bloMirror>(element.Element("mirror"), true, out mMirror)) {
+				mMirror = 0;
+			}
+
+			mRotate90 = (element.Element("rotate-90") | false);
+
+			if (!Enum.TryParse<bloWrapMode>(element.Element("wrap-s"), true, out mWrapS)) {
+				mWrapS = bloWrapMode.None;
+			}
+
+			if (!Enum.TryParse<bloWrapMode>(element.Element("wrap-t"), true, out mWrapT)) {
+				mWrapT = bloWrapMode.None;
+			}
+
+			bloXml.loadGradient(element.Element("gradient"), out mFromColor, out mToColor);
+
+			var white = new bloColor(bloColor.cWhite);
+			var colors = element.Element("colors");
+
+			mColors[cTopLeft] = bloXml.loadColor(colors.Element("top-left"), white);
+			mColors[cTopRight] = bloXml.loadColor(colors.Element("top-right"), white);
+			mColors[cBottomLeft] = bloXml.loadColor(colors.Element("bottom-left"), white);
+			mColors[cBottomRight] = bloXml.loadColor(colors.Element("bottom-right"), white);
 		}
 
 		public override void saveBlo1(aBinaryWriter writer) {

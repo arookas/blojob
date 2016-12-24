@@ -1,5 +1,6 @@
 ﻿
 using arookas.IO.Binary;
+using arookas.Xml;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -40,6 +41,7 @@ namespace arookas {
 			switch (format) {
 				case bloFormat.Compact: loadCompact(source as aBinaryReader); break;
 				case bloFormat.Blo1: loadBlo1(source as aBinaryReader); break;
+				case bloFormat.Xml: loadXml(source as xElement); break;
 				default: throw new NotImplementedException("Format is not implemented.");
 			}
 		}
@@ -112,6 +114,22 @@ namespace arookas {
 			}
 
 			reader.Skip(4);
+		}
+		protected virtual void loadXml(xElement element) {
+			if (element == null) {
+				throw new ArgumentNullException("element");
+			}
+
+			mName = convertStringToName(element.Attribute("id") | "");
+			mConnectParent = (element.Attribute("connect") | false);
+			mVisible = (element.Attribute("visible") | true);
+			mRect = bloXml.loadRectangle(element.Element("rectangle"));
+			mAngle = ((element.Element("angle") | 0) % 360);
+			if (!Enum.TryParse<bloAnchor>(element.Element("anchor"), true, out mAnchor)) {
+				mAnchor = bloAnchor.TopLeft;
+			}
+			mAlpha = (byte)bloMath.clamp((element.Element("alpha") | 255), 0, 255);
+			mInheritAlpha = (element.Element("alpha").Attribute("inherit") | true);
 		}
 
 		public virtual void saveBlo1(aBinaryWriter writer) {

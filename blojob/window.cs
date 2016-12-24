@@ -1,8 +1,10 @@
 ﻿
 using arookas.IO.Binary;
+using arookas.Xml;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
+using System;
 using System.Xml;
 
 namespace arookas {
@@ -134,6 +136,27 @@ namespace arookas {
 			}
 
 			reader.Skip(4);
+			postLoad();
+		}
+		protected override void loadXml(xElement element) {
+			base.loadXml(element);
+
+			var finder = bloResourceFinder.getFinder();
+
+			var content = element.Element("content");
+			mContentRect = bloXml.loadRectangle(content.Element("rectangle"));
+			mContentTexture = finder.find<bloTexture>(content.Element("texture"), "timg");
+
+			mPalette = finder.find<bloPalette>(element.Element("palette"), "tlut");
+			
+			var corners = element.Element("corners");
+			loadCornerXml(mTextures[cTopLeft], finder, corners.Element("top-left"), 0);
+			loadCornerXml(mTextures[cTopRight], finder, corners.Element("top-right"), bloMirror.X);
+			loadCornerXml(mTextures[cBottomLeft], finder, corners.Element("bottom-left"), bloMirror.Y);
+			loadCornerXml(mTextures[cBottomRight], finder, corners.Element("bottom-right"), (bloMirror.X | bloMirror.Y));
+
+			bloXml.loadGradient(element.Element("gradient"), out mFromColor, out mToColor);
+
 			postLoad();
 		}
 		void postLoad() {
@@ -373,6 +396,14 @@ namespace arookas {
 			GL.Vertex2(left, bottom);
 			GL.End();
 
+		}
+
+		static void loadCornerXml(TextureSlot slot, bloResourceFinder finder, xElement element, bloMirror defMirror) {
+			slot.texture = finder.find<bloTexture>(element.Element("texture"), "timg");
+			slot.color = bloXml.loadColor(element.Element("color"), new bloColor(bloColor.cWhite));
+			if (!Enum.TryParse<bloMirror>(element.Element("mirror"), out slot.mirror)) {
+				slot.mirror = 0;
+			}
 		}
 
 		protected const int cTopLeft = 0;

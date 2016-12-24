@@ -1,5 +1,6 @@
 ﻿
 using arookas.IO.Binary;
+using arookas.Xml;
 using OpenTK.Graphics.OpenGL;
 using System;
 using System.IO;
@@ -173,6 +174,48 @@ namespace arookas {
 						return false;
 					}
 				}
+			}
+		}
+
+		public static bloScreen loadXml(Stream stream) {
+			var document = new xDocument(stream);
+			bloScreen scrn = new bloScreen();
+
+			var finder = bloResourceFinder.getFinder();
+
+			var root = document.Root;
+			if (root == null || root.Name != "screen") {
+				return null;
+			}
+
+			var info = root.Element("info");
+			var width = (info.Element("width") | 640);
+			var height = (info.Element("height") | 480);
+			scrn.mRect.set(0, 0, width, height);
+			scrn.mTintColor = bloXml.loadColor(info.Element("tint-color"), new bloColor(bloColor.cZero));
+
+			// TODO: make an immutable way of adding search paths to the finder that doesn't stack between calls
+			var searchPaths = root.Element("search-paths");
+			foreach (var searchPath in searchPaths.Elements("path")) {
+				finder.addGlobalPath(searchPath);
+			}
+
+			loadXml(scrn, root);
+
+			return scrn;
+		}
+		static void loadXml(bloPane parent, xElement element) {
+			foreach (var childElement in element) {
+				bloPane pane;
+				switch (childElement.Name.ToLowerInvariant()) {
+					case "pane": pane = new bloPane(); break;
+					case "picture": pane = new bloPicture(); break;
+					case "window": pane = new bloWindow(); break;
+					case "textbox": pane = new bloTextbox(); break;
+					default: continue;
+				}
+				pane.load(parent, childElement, bloFormat.Xml);
+				loadXml(pane, childElement);
 			}
 		}
 
