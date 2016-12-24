@@ -367,6 +367,13 @@ namespace arookas {
 		}
 		void drawContentsTexture(int x, int y, int width, int height, int alpha) {
 
+			var context = bloContext.getContext();
+
+			context.useProgram();
+			context.setProgramColor("fromColor", new bloColor(bloColor.cZero));
+			context.setProgramColor("toColor", new bloColor(bloColor.cOne));
+			context.setProgramInt("transparency", mContentTexture.getTransparency());
+
 			var hFactor = ((double)width / (double)mContentTexture.getWidth());
 			var vFactor = ((double)height / (double)mContentTexture.getHeight());
 			var sLeft = (-(hFactor - 1.0d) * 0.5d);
@@ -398,6 +405,8 @@ namespace arookas {
 			GL.Color4(whiteColor);
 			GL.Vertex2(left, bottom);
 			GL.End();
+
+			context.unuseProgram();
 
 		}
 
@@ -439,19 +448,12 @@ namespace arookas {
 			}
 			public void draw(int x, int y, int width, int height, double sRight, double tBottom, double sLeft, double tTop, int alpha, bloColor fromColor, bloColor toColor) {
 
-				bool gradient = (
-					fromColor.rgba != bloColor.cZero ||
-					toColor.rgba != bloColor.cOne
-				);
-
 				var context = bloContext.getContext();
 
-				if (gradient) {
-					context.useProgram();
-					context.setProgramColor("fromColor", fromColor);
-					context.setProgramColor("toColor", toColor);
-					context.setProgramInt("transparency", texture.getTransparency());
-				}
+				context.useProgram();
+				context.setProgramColor("fromColor", fromColor);
+				context.setProgramColor("toColor", toColor);
+				context.setProgramInt("transparency", texture.getTransparency());
 
 				int left = x;
 				int top = y;
@@ -478,9 +480,7 @@ namespace arookas {
 				GL.Vertex2(left, bottom);
 				GL.End();
 
-				if (gradient) {
-					context.unuseProgram();
-				}
+				context.unuseProgram();
 
 			}
 			

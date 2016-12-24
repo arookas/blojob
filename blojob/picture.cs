@@ -406,22 +406,12 @@ namespace arookas {
 		}
 		void drawSelf(int x, int y, int width, int height, Vector2d uvTopLeft, Vector2d uvTopRight, Vector2d uvBottomLeft, Vector2d uvBottomRight) {
 			
-			bool gradient = (
-				mFromColor.rgba != bloColor.cZero ||
-				mToColor.rgba != bloColor.cOne
-			);
-
 			var context = bloContext.getContext();
-			
-			if (gradient) {
-				context.useProgram();
-				context.setProgramColor("fromColor", mFromColor);
-				context.setProgramColor("toColor", mToColor);
 
-				// if transparency is disabled on the texture, the alpha channel is then
-				// blended to TEVREG2, which is hardcoded to store an opaque white color
-				context.setProgramInt("transparency", mTexture.getTransparency());
-			}
+			context.useProgram();
+			context.setProgramColor("fromColor", mFromColor);
+			context.setProgramColor("toColor", mToColor);
+			context.setProgramInt("transparency", mTexture.getTransparency());
 
 			bloRectangle rect = new bloRectangle(x, y, (x + width), (y + height));
 
@@ -448,13 +438,7 @@ namespace arookas {
 			GL.Vertex2(rect.bottomleft);
 			GL.End();
 
-			if (mTexture.getTransparency() == 0) {
-				// gl.enableBlend();
-			}
-
-			if (gradient) {
-				context.unuseProgram();
-			}
+			context.unuseProgram();
 
 		}
 

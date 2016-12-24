@@ -18,7 +18,6 @@ namespace arookas {
 		int mWidthCount, mGlyphCount, mMapCount;
 		int mFirstChar;
 		DecoderMethod mDecoderMethod;
-		bool mGradient;
 		bloColor mFromColor, mToColor;
 		int mTextureName;
 		int mGlyphIndex;
@@ -255,12 +254,10 @@ namespace arookas {
 
 			var context = bloContext.getContext();
 
-			if (mGradient) {
-				context.useProgram();
-				context.setProgramColor("fromColor", mFromColor);
-				context.setProgramColor("toColor", mToColor);
-				context.setProgramInt("transparency", 1);
-			}
+			context.useProgram();
+			context.setProgramColor("fromColor", mFromColor);
+			context.setProgramColor("toColor", mToColor);
+			context.setProgramInt("transparency", 1);
 
 			WidthEntry widthEntry;
 			loadFont(character, out widthEntry);
@@ -308,26 +305,18 @@ namespace arookas {
 			GL.Vertex3(fLeft, fBottom, 0.0d);
 			GL.End();
 
-			if (mGradient) {
-				context.unuseProgram();
-			}
+			context.unuseProgram();
 
 			return totalWidth;
 		}
 
 		public override void setGL() {
-			mGradient = false;
 			mFromColor = new bloColor(bloColor.cZero);
 			mToColor = new bloColor(bloColor.cOne);
 		}
 		public override void setGL(bloColor fromColor, bloColor toColor) {
-			if (fromColor.rgba != bloColor.cZero || toColor.rgba != bloColor.cOne) {
-				mGradient = true;
-				mFromColor = fromColor;
-				mToColor = toColor;
-			} else {
-				setGL();
-			}
+			mFromColor = fromColor;
+			mToColor = toColor;
 		}
 
 		static DecoderMethod[] sAboutEncoding = {
