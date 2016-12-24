@@ -41,7 +41,7 @@ The viewer, _pablo_, has a very simple command-line interface allowing drag&#820
 The parameters are as follows:
 
 ```
-pablo <input&#8209;file> [<format> [<search&#8209;path> [...]]]
+pablo <input-file> [<format> [<search-path> [...]]]
 ```
 
 |Parameter|Description|
@@ -62,7 +62,7 @@ Once the BLO is loaded, you may use various keys to toggle certain rendering fla
 The converter, _joblo_, does not support drag&#8209;and&#8209;drop usage. It takes four parameters as follows:
 
 ```
-joblo <input&#8209;file> <input&#8209;format> <output&#8209;file> <output&#8209;format>
+joblo <input-file> <input-format> <output-file> <output-format>
 ```
 
 |Parameter|Description|
