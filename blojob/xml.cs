@@ -2,6 +2,7 @@
 using arookas.Xml;
 using System;
 using System.Globalization;
+using System.Text;
 using System.Xml;
 
 namespace arookas {
@@ -95,7 +96,32 @@ namespace arookas {
 				return;
 			}
 			writer.WriteStartElement(name);
-			writer.WriteString(font.decodeToUtf16(buffer));
+			var text = font.decodeToUtf16(buffer);
+			var sbuffer = new StringBuilder(text.Length);
+			for (int i = 0; i < text.Length; ++i) {
+				if (Char.IsHighSurrogate(text[i])) {
+					if (i < (text.Length - 1) && Char.IsLowSurrogate(text[++i])) {
+						if (sbuffer.Length > 0) {
+							writer.WriteString(sbuffer.ToString());
+							sbuffer.Clear();
+						}
+						writer.WriteSurrogateCharEntity(text[i], text[i - 1]);
+					}
+					continue;
+				} else if (Char.IsControl(text[i])) {
+					if (sbuffer.Length > 0) {
+						writer.WriteString(sbuffer.ToString());
+						sbuffer.Clear();
+					}
+					writer.WriteCharEntity(text[i]);
+				} else {
+					sbuffer.Append(text[i]);
+				}
+			}
+			if (sbuffer.Length > 0) {
+				writer.WriteString(sbuffer.ToString());
+				sbuffer.Clear();
+			}
 			writer.WriteEndElement();
 		}
 
