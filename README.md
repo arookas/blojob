@@ -23,7 +23,7 @@ To compile _blojob_, you'll need to have the following libraries compiled and/or
 The repository contains a [premake5](https://premake.github.io/) [script](premake5.lua).
 Simply run the script with premake5 and build the resulting solution.
 
-> _**Note:** You might need to fill in any unresolved-reference errors by supplying your IDE with the paths to the dependencies listed above._
+> **Note:** You might need to fill in any unresolved-reference errors by supplying your IDE with the paths to the dependencies listed above.
 
 ### Usage
 
@@ -72,4 +72,4 @@ joblo <input-file> <input-format> <output-file> <output-format>
 |&lt;output-file&gt;|The path to which to save the converted BLO. May be relative or absolute. Must not be the same as &lt;input-file&gt;|
 |&lt;output-format&gt;|Specifies the format to which to convert the input file. The possible values are: _compact_, _blo1_, _xml_.|
 
-> _**Note:** If both &lt;input-format&gt; and &lt;output-format&gt; are the same value, _joblo_ performs a basic file-copy operation with no conversion performed._
+> **Note:** If both &lt;input-format&gt; and &lt;output-format&gt; are the same value, joblo performs a basic file-copy operation with no conversion performed.
