@@ -27,7 +27,13 @@ Simply run the script with premake5 and build the resulting solution.
 
 ### Usage
 
-Once built, there will be a viewer program, _pablo_, and a shared library, _blojob_.
+Once built, there will be a several executables:
+
+|Name|Description|
+|----|-----------|
+|blojob|The primary shared library. Contains the BLO loading, saving, rendering, and manipulation code.|
+|pablo|Simple BLO viewer, accurately displaying any given BLO file of the supported formats.|
+|joblo|Dedicated BLO converter. Useful for upgrading "compact" BLOs to BLO1, as well as converting BLO1 to XML and back for basic editing.|
 
 #### pablo
 
@@ -41,7 +47,7 @@ pablo <input-file> [<format> [<search-path> [...]]]
 |Parameter|Description|
 |---------|-----------|
 |&lt;input-file&gt;|The path to the BLO file to view. This is the only required parameter, allowing drag-and-drop with default configuration. May be a relative or absolute path.|
-|&lt;format&gt;|Allows you to specify the format of the input BLO file. By default, this is assumed to be the BLO1 format. The possible values are: _compact_, _blo1_.|
+|&lt;format&gt;|Allows you to specify the format of the input BLO file. By default, this is assumed to be the BLO1 format. The possible values are: _compact_, _blo1_, _xml_.|
 |&lt;search-path&gt;|Adds a fallback global search path to the resource finder. This is used to find texture, fonts, palettes, and other files referenced from within the BLO file. You may specify any number of search paths.|
 
 Once the BLO is loaded, you may use various keys to toggle certain rendering flags:
@@ -50,3 +56,20 @@ Once the BLO is loaded, you may use various keys to toggle certain rendering fla
 |---|------|
 |p|Allows panes to be rendered as white quads.|
 |v|Shows all BLO elements, even ones which are set to be hidden by default.|
+
+#### joblo
+
+The converter, _joblo_, does not support drag-and-drop usage. It takes four parameters as follows:
+
+```
+joblo <input-file> <input-format> <output-file> <output-format>
+```
+
+|Parameter|Description|
+|---------|-----------|
+|&lt;input-file&gt;|The path to the BLO file to convert. May be a relative or absolute path. Must not be the same as &lt;output-file&gt;.|
+|&lt;input-format&gt;|Specifies the format of the input file. The possible values are: _compact_, _blo1_, _xml_.|
+|&lt;output-file&gt;|The path to which to save the converted BLO. May be relative or absolute. Must not be the same as &lt;input-file&gt;|
+|&lt;output-format&gt;|Specifies the format to which to convert the input file. The possible values are: _compact_, _blo1_, _xml_.|
+
+> _**Note:** If both &lt;input-format&gt; and &lt;output-format&gt; are the same value, _joblo_ performs a basic file-copy operation with no conversion performed._
