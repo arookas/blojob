@@ -183,7 +183,9 @@ namespace arookas {
 			var document = new xDocument(reader);
 			bloScreen scrn = new bloScreen();
 
-			var finder = bloResourceFinder.getFinder();
+			var oldFinder = bloResourceFinder.getFinder();
+			var newFinder = new bloResourceFinder(oldFinder);
+			bloResourceFinder.setFinder(newFinder);
 
 			var root = document.Root;
 			if (root == null || root.Name != "screen") {
@@ -196,13 +198,14 @@ namespace arookas {
 			scrn.mRect.set(0, 0, width, height);
 			scrn.mTintColor = bloXml.loadColor(info.Element("tint-color"), new bloColor(bloColor.cZero));
 
-			// TODO: make an immutable way of adding search paths to the finder that doesn't stack between calls
 			var searchPaths = root.Element("search-paths");
 			foreach (var searchPath in searchPaths.Elements("path")) {
-				finder.addGlobalPath(searchPath);
+				newFinder.addGlobalPath(searchPath);
 			}
 
 			loadXml(scrn, root);
+
+			bloResourceFinder.setFinder(oldFinder);
 
 			return scrn;
 		}
