@@ -13,15 +13,15 @@ namespace arookas {
 				r = (int)((value >> 24) & 255);
 				g = (int)((value >> 16) & 255);
 				b = (int)((value >> 8) & 255);
-				a = (int)(value & 255);
+				a = (int)((value >> 0) & 255);
 			}
 		}
 
 		public bloColor(int r, int g, int b, int a) {
-			this.r = r;
-			this.g = g;
-			this.b = b;
-			this.a = a % 255;
+			this.r = (r & 255);
+			this.g = (g & 255);
+			this.b = (b & 255);
+			this.a = (a & 255);
 		}
 		public bloColor(uint rgba) {
 			r = (int)((rgba >> 24) & 255);
