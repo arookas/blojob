@@ -59,10 +59,10 @@ Once the BLO is loaded, you may use various keys to toggle certain rendering fla
 
 #### joblo
 
-The converter, _joblo_, does not support drag&#8209;and&#8209;drop usage. It takes four parameters as follows:
+The converter, _joblo_, does not support drag&#8209;and&#8209;drop usage. It takes at least four parameters as follows:
 
 ```
-joblo <input-file> <input-format> <output-file> <output-format>
+joblo <input-file> <input-format> <output-file> <output-format> [<search-path> [...]]
 ```
 
 |Parameter|Description|
@@ -71,5 +71,6 @@ joblo <input-file> <input-format> <output-file> <output-format>
 |&lt;input&#8209;format&gt;|Specifies the format of the input file. The possible values are: _compact_, _blo1_, _xml_.|
 |&lt;output&#8209;file&gt;|The path to which to save the converted BLO. May be relative or absolute. Must not be the same as &lt;input&#8209;file&gt;|
 |&lt;output&#8209;format&gt;|Specifies the format to which to convert the input file. The possible values are: _compact_, _blo1_, _xml_.|
+|&lt;search&#8209;path&gt;|Adds a fallback global search path to the resource finder. This is used to find texture, fonts, palettes, and other files referenced from within the BLO file. You may specify any number of search paths.|
 
 > **Note:** If both &lt;input&#8209;format&gt; and &lt;output&#8209;format&gt; are the same value, joblo performs a basic file-copy operation with no conversion performed.
