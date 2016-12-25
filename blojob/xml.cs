@@ -3,6 +3,7 @@ using arookas.Xml;
 using System;
 using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 
 namespace arookas {
@@ -51,8 +52,62 @@ namespace arookas {
 				color.g = bloMath.clamp(element.Element("g"), 0, 255);
 				color.b = bloMath.clamp(element.Element("b"), 0, 255);
 				color.a = bloMath.clamp(element.Element("a") | 255, 0, 255);
-			} else if (UInt32.TryParse(element.Value, NumberStyles.AllowHexSpecifier, null, out rgba)) {
-				color.rgba = rgba;
+			} else {
+				var match = Regex.Match(element.Value, @"\s*(?<value>[0-9a-f]{1,8})\s*", (RegexOptions.IgnoreCase | RegexOptions.CultureInvariant));
+				if (match.Success) {
+					var valueGrp = match.Groups["value"];
+					rgba = UInt32.Parse(valueGrp.Value, NumberStyles.AllowHexSpecifier);
+					switch (valueGrp.Length) {
+						case 1: color = new bloColor(255, 255, 255, (int)(rgba * 17)); break;
+						case 2: color = new bloColor(255, 255, 255, (int)rgba); break;
+						case 3: {
+							color = new bloColor(
+								(int)(((rgba >> 8) & 15) * 17),
+								(int)(((rgba >> 4) & 15) * 17),
+								(int)(((rgba >> 0) & 15) * 17),
+								255
+							);
+							break;
+						}
+						case 4: {
+							color = new bloColor(
+								(int)(((rgba >> 12) & 15) * 17),
+								(int)(((rgba >> 8) & 15) * 17),
+								(int)(((rgba >> 4) & 15) * 17),
+								(int)(((rgba >> 0) & 15) * 17)
+							);
+							break;
+						}
+						case 5: {
+							color = new bloColor(
+								(int)(((rgba >> 16) & 15) * 17),
+								(int)(((rgba >> 12) & 15) * 17),
+								(int)(((rgba >> 7) & 15) * 17),
+								(int)((rgba >> 0) & 255)
+							);
+							break;
+						}
+						case 6: {
+							color = new bloColor(
+								(int)((rgba >> 16) & 255),
+								(int)((rgba >> 8) & 255),
+								(int)((rgba >> 0) & 255),
+								255
+							);
+							break;
+						}
+						case 7: {
+							color = new bloColor(
+								(int)((rgba >> 20) & 255),
+								(int)((rgba >> 12) & 255),
+								(int)((rgba >> 4) & 255),
+								(int)(((rgba >> 0) & 15) * 17)
+							);
+							break;
+						}
+						case 8: color = new bloColor(rgba); break;
+					}
+				}
 			}
 			return color;
 		}
