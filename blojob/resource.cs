@@ -92,6 +92,15 @@ namespace arookas {
 			mGlobalPaths = new List<string>(10);
 			mCache = new Dictionary<string, bloResource>(100, new EqualityComparer());
 		}
+		public bloResourceFinder(bloResourceFinder finder) {
+			if (finder == null) {
+				throw new ArgumentNullException("finder");
+			}
+			mLocalPath = finder.mLocalPath;
+			mGlobalPaths = new List<string>(finder.mGlobalPaths.Capacity);
+			mGlobalPaths.AddRange(finder.mGlobalPaths);
+			mCache = new Dictionary<string, bloResource>(100, new EqualityComparer());
+		}
 
 		public string setLocalPath(string localPath) {
 			string old = mLocalPath;
