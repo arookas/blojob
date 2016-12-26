@@ -20,8 +20,8 @@ namespace arookas {
 		public static void initTexObjLOD(int textureName, gxTextureFilter minFilter, gxTextureFilter magFilter, double minLod, double maxLod, double lodBias, bool biasClamp, bool doEdgeLod, gxAnisotropy maxAniso) {
 			GL.BindTexture(TextureTarget.Texture2D, textureName);
 			// GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureLodBias, lodBias);
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.Linear); // minFilter);
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMinFilter.Linear); // magFilter);
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)convertMinFilter(minFilter));
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)convertMagFilter(magFilter));
 			// GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinLod, minLod);
 			// GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMaxLod, maxLod);
 		}
@@ -50,6 +50,25 @@ namespace arookas {
 				case gxWrapMode.Mirror: return TextureWrapMode.MirroredRepeat;
 			}
 			throw new NotImplementedException("Unknown wrap mode.");
+		}
+
+		static TextureMinFilter convertMinFilter(gxTextureFilter minFilter) {
+			switch (minFilter) {
+				case gxTextureFilter.Near: return TextureMinFilter.Nearest;
+				case gxTextureFilter.Linear: return TextureMinFilter.Linear;
+				case gxTextureFilter.NearMipNear: return TextureMinFilter.NearestMipmapNearest;
+				case gxTextureFilter.LinearMipNear: return TextureMinFilter.LinearMipmapNearest;
+				case gxTextureFilter.NearMipLinear: return TextureMinFilter.NearestMipmapLinear;
+				case gxTextureFilter.LinearMipLinear: return TextureMinFilter.LinearMipmapLinear;
+			}
+			throw new NotImplementedException("Unknown minification filter.");
+		}
+		static TextureMagFilter convertMagFilter(gxTextureFilter magFilter) {
+			switch (magFilter) {
+				case gxTextureFilter.Near: return TextureMagFilter.Nearest;
+				case gxTextureFilter.Linear: return TextureMagFilter.Linear;
+			}
+			throw new ArgumentOutOfRangeException("magFilter", "Invalid magnification filter.");
 		}
 
 	}
