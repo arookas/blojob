@@ -14,7 +14,7 @@ namespace arookas {
 		protected gxWrapMode mWrapS, mWrapT;
 		protected gxTlutFormat mTlutFormat;
 		protected gxAnisotropy mMaxAniso;
-		protected int mMinFilter, mMagFilter;
+		protected gxTextureFilter mMinFilter, mMagFilter;
 		protected int mMinLod, mMaxLod;
 		protected int mLodBias;
 		protected bool mMipMap, mEdgeLOD, mBiasClamp;
@@ -53,8 +53,8 @@ namespace arookas {
 			mEdgeLOD = (reader.Read8() != 0); // 0011
 			mBiasClamp = (reader.Read8() != 0); // 0012
 			mMaxAniso = (gxAnisotropy)reader.Read8(); // 0013
-			mMinFilter = reader.Read8(); // 0014
-			mMagFilter = reader.Read8(); // 0015
+			mMinFilter = (gxTextureFilter)reader.Read8(); // 0014
+			mMagFilter = (gxTextureFilter)reader.Read8(); // 0015
 			mMinLod = reader.ReadS8(); // 0016
 			mMaxLod = reader.ReadS8(); // 0017
 			mImageCount = reader.Read8(); // 0018 (0001)
@@ -70,8 +70,8 @@ namespace arookas {
 			if (!mLoadedGL) {
 				mTextureName = gl.genTexObj();
 			}
-			gl.initTexObj(mTextureName, mImageData, mWidth, mHeight, mWrapS, mWrapT, false);
-			gl.initTexObjLOD(mTextureName, gxTextureFilter.Linear, gxTextureFilter.Linear, 0.0d, 0.0d, 0.0d, false, false, gxAnisotropy.Aniso1);
+			gl.initTexObj(mTextureName, mImageData, mWidth, mHeight, mWrapS, mWrapT, mMipMap);
+			gl.initTexObjLOD(mTextureName, mMinFilter, mMagFilter, (mMinLod * 0.13d), (mMaxLod * 0.13d), (mLodBias / 100.0d), mBiasClamp, mEdgeLOD, mMaxAniso);
 			mLoadedGL = true;
 			return mTextureName;
 		}
