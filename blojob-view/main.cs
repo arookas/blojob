@@ -48,7 +48,23 @@ namespace arookas {
 			}
 			bloResourceFinder.setFinder(finder);
 
-			var viewer = new bloViewer(input, format);
+			bloScreen screen = null;
+			using (Stream stream = File.OpenRead(input)) {
+				switch (format) {
+					case bloFormat.Compact: screen = bloScreen.loadCompact(stream); break;
+					case bloFormat.Blo1: screen = bloScreen.loadBlo1(stream); break;
+					case bloFormat.Xml: screen = bloScreen.loadXml(stream); break;
+				}
+			}
+
+			if (screen == null) {
+				Console.WriteLine("Failed to load input file '{0}'", input);
+				return;
+			}
+
+			var viewer = new bloViewer(screen);
+			viewer.setTitle(Path.GetFileName(input));
+			viewer.setSize(600, 448);
 			viewer.run();
 		}
 

@@ -3,47 +3,32 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using System;
+using System.Drawing;
 using System.IO;
 
 namespace arookas {
 
 	class bloViewer : GameWindow {
 
-		string mInput;
-		bloFormat mFormat;
 		bloScreen mScreen;
 		bloContext mContext;
 		glShader mFragmentShader, mVertexShader;
 		bool mShowPanes;
 		bool mShowAll;
 
-		public bloViewer(string input, bloFormat format) {
-			mInput = input;
-			mFormat = format;
-			Title = String.Format("pablo v{0} - {1}", blojob.getVersion(), Path.GetFileName(mInput));
-			initScreen();
-			initSize();
+		public bloViewer(bloScreen screen) {
+			var rectangle = screen.getRectangle();
+			initScreen(screen, rectangle.width, rectangle.height);
+			initContext();
+		}
+		public bloViewer(bloScreen screen, int width, int height) {
+			initScreen(screen, width, height);
 			initContext();
 		}
 
-		void initScreen() {
-			bloScreen screen = null;
-			using (Stream stream = File.OpenRead(mInput)) {
-				switch (mFormat) {
-					case bloFormat.Compact: screen = bloScreen.loadCompact(stream); break;
-					case bloFormat.Blo1: screen = bloScreen.loadBlo1(stream); break;
-					case bloFormat.Xml: screen = bloScreen.loadXml(stream); break;
-				}
-			}
-			if (screen != null) {
-				mScreen = screen;
-			}
-		}
-		void initSize() {
-			bloRectangle rectangle = mScreen.getRectangle();
-			rectangle.normalize();
-			ClientRectangle = rectangle;
-			WindowBorder = WindowBorder.Fixed;
+		void initScreen(bloScreen screen, int width, int height) {
+			mScreen = screen;
+			setSize(width, height);
 		}
 		void initContext() {
 			mContext = new bloContext();
@@ -74,8 +59,8 @@ namespace arookas {
 		void initOrtho(bloRectangle viewport) {
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.LoadIdentity();
-			GL.Viewport(viewport.left, viewport.top, (viewport.right - viewport.left), (viewport.bottom - viewport.top));
-			GL.Ortho(viewport.left, viewport.right, viewport.bottom, viewport.top, -1.0d, 1.0d);
+			GL.Viewport(((ClientRectangle.Width - viewport.width) / 2), ((ClientRectangle.Height - viewport.height) / 2), viewport.width, viewport.height);
+			GL.Ortho(viewport.left, viewport.right, (viewport.bottom + 0.5d), viewport.top, -1.0d, 1.0d);
 			GL.MatrixMode(MatrixMode.Modelview);
 			GL.LoadIdentity();
 		}
@@ -92,6 +77,17 @@ namespace arookas {
 
 		public void run() {
 			Run(30.0d, 30.0d);
+		}
+		public void setTitle(string title) {
+			if (String.IsNullOrEmpty(title)) {
+				Title = String.Format("pablo v{0}", blojob.getVersion());
+			} else {
+				Title = String.Format("pablo v{0} - {1}", blojob.getVersion(), title);
+			}
+		}
+		public void setSize(int width, int height) {
+			ClientRectangle = new Rectangle(0, 0, width, height);
+			WindowBorder = WindowBorder.Fixed;
 		}
 
 		protected override void OnKeyPress(KeyPressEventArgs e) {
