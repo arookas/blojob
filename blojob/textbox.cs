@@ -165,6 +165,8 @@ namespace arookas {
 				numparams = 10;
 			}
 
+			writer.Write8(numparams);
+
 			bloResource.save(mFont, writer);
 			writer.Write32(mTopColor.rgba);
 			writer.Write32(mBottomColor.rgba);
