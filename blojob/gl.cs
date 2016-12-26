@@ -14,8 +14,8 @@ namespace arookas {
 		public static void initTexObj(int textureName, aRGBA[] data, int width, int height, gxWrapMode wrapS, gxWrapMode wrapT, bool mipmap) {
 			GL.BindTexture(TextureTarget.Texture2D, textureName);
 			GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, width, height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, data);
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)convertGXToGL(wrapS));
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)convertGXToGL(wrapT));
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)convertWrapMode(wrapS));
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)convertWrapMode(wrapT));
 		}
 		public static void initTexObjLOD(int textureName, gxTextureFilter minFilter, gxTextureFilter magFilter, double minLod, double maxLod, double lodBias, bool biasClamp, bool doEdgeLod, gxAnisotropy maxAniso) {
 			GL.BindTexture(TextureTarget.Texture2D, textureName);
@@ -43,7 +43,7 @@ namespace arookas {
 			}
 		}
 
-		static TextureWrapMode convertGXToGL(gxWrapMode mode) {
+		static TextureWrapMode convertWrapMode(gxWrapMode mode) {
 			switch (mode) {
 				case gxWrapMode.Clamp: return TextureWrapMode.ClampToEdge;
 				case gxWrapMode.Repeat: return TextureWrapMode.Repeat;
