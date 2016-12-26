@@ -24,6 +24,7 @@ namespace arookas {
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)convertMagFilter(magFilter));
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinLod, (float)bloMath.clamp(minLod, 0.0d, 10.0d));
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMaxLod, (float)bloMath.clamp(maxLod, 0.0d, 10.0d));
+			GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, convertAnisotropy(maxAniso));
 		}
 		public static void loadTexObj(int textureName) {
 			GL.Enable(EnableCap.Texture2D);
@@ -69,6 +70,14 @@ namespace arookas {
 				case gxTextureFilter.Linear: return TextureMagFilter.Linear;
 			}
 			throw new ArgumentOutOfRangeException("magFilter", "Invalid magnification filter.");
+		}
+		static float convertAnisotropy(gxAnisotropy maxAniso) {
+			switch (maxAniso) {
+				case gxAnisotropy.Aniso1: return 1.0f;
+				case gxAnisotropy.Aniso2: return 2.0f;
+				case gxAnisotropy.Aniso4: return 4.0f;
+			}
+			throw new ArgumentOutOfRangeException("maxAniso", "Invalid anisotropy.");
 		}
 
 	}
