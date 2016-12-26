@@ -62,7 +62,7 @@ namespace arookas {
 				case gxTextureFilter.NearMipLinear: return TextureMinFilter.NearestMipmapLinear;
 				case gxTextureFilter.LinearMipLinear: return TextureMinFilter.LinearMipmapLinear;
 			}
-			throw new NotImplementedException("Unknown minification filter.");
+			throw new ArgumentOutOfRangeException("minFilter", "Invalid minification filter.");
 		}
 		static TextureMagFilter convertMagFilter(gxTextureFilter magFilter) {
 			switch (magFilter) {
