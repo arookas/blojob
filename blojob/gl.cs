@@ -18,6 +18,7 @@ namespace arookas {
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)convertGXToGL(wrapT));
 		}
 		public static void initTexObjLOD(int textureName, gxTextureFilter minFilter, gxTextureFilter magFilter, double minLod, double maxLod, double lodBias, bool biasClamp, bool doEdgeLod, gxAnisotropy maxAniso) {
+			GL.BindTexture(TextureTarget.Texture2D, textureName);
 			// GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureLodBias, lodBias);
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.Linear); // minFilter);
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMinFilter.Linear); // magFilter);
