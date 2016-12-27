@@ -524,6 +524,7 @@ namespace arookas {
 
 		public void setBlendKonstColor() {
 			var konst = new double[4];
+#if BLOJOB_KONST
 			for (int slot = 1; slot < mTextures.Count; ++slot) {
 				double sum = 0.0d;
 				for (int prev = 0; prev < slot; ++prev) {
@@ -534,10 +535,20 @@ namespace arookas {
 					konst[slot] = (1.0d - (sum / factor));
 				}
 			}
+#else
+			double sum = 0.0d;
+			for (var i = 0; i < mTextures.Count; ++i) {
+				sum += mTextures[i].blendColorFactor;
+			}
+			for (var i = 0; i < mTextures.Count; ++i) {
+				konst[i] = (mTextures[i].blendColorFactor / sum);
+			}
+#endif
 			mKonstColor = new Vector4d(konst[0], konst[1], konst[2], konst[3]);
 		}
 		public void setBlendKonstAlpha() {
 			var konst = new double[4];
+#if BLOJOB_KONST
 			for (int slot = 1; slot < mTextures.Count; ++slot) {
 				double sum = 0.0d;
 				for (int prev = 0; prev < slot; ++prev) {
@@ -548,6 +559,15 @@ namespace arookas {
 					konst[slot] = (1.0d - (sum / factor));
 				}
 			}
+#else
+			double sum = 0.0d;
+			for (var i = 0; i < mTextures.Count; ++i) {
+				sum += mTextures[i].blendAlphaFactor;
+			}
+			for (var i = 0; i < mTextures.Count; ++i) {
+				konst[i] = (mTextures[i].blendAlphaFactor / sum);
+			}
+#endif
 			mKonstAlpha = new Vector4d(konst[0], konst[1], konst[2], konst[3]);
 		}
 
