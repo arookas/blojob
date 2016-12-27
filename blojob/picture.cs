@@ -441,7 +441,7 @@ namespace arookas {
 			var bottomRightColor = bloMath.scaleAlpha(mColors[cBottomRight], mCumulativeAlpha);
 
 			for (var i = 0; i < mTextures.Count; ++i) {
-				mTextures[0].texture.bind(i);
+				mTextures[i].texture.bind(i);
 			}
 
 			GL.Begin(PrimitiveType.Quads);
