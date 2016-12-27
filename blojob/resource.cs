@@ -159,7 +159,7 @@ namespace arookas {
 			return resource;
 		}
 
-		T find<T>(bloResourceType type, string name, string directory)
+		public T find<T>(bloResourceType type, string name, string directory)
 			where T : bloResource, new() {
 			string path = null;
 			switch (type) {
