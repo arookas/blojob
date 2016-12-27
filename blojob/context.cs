@@ -2,6 +2,7 @@
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
+using System.Collections.Generic;
 
 namespace arookas {
 	
@@ -10,9 +11,10 @@ namespace arookas {
 		bloRenderFlags mRenderFlags;
 		glShader mFragmentShader, mVertexShader;
 		glProgram mProgram;
+		Dictionary<string, int> mUniformCache;
 
 		public bloContext() {
-			// empty
+			mUniformCache = new Dictionary<string, int>(100);
 		}
 
 		public bloRenderFlags getRenderFlags() {
@@ -43,6 +45,7 @@ namespace arookas {
 				mProgram.attach(fragment);
 				mProgram.attach(vertex);
 				mProgram.link();
+				mUniformCache.Clear();
 			} catch {
 				return false;
 			}
@@ -60,77 +63,67 @@ namespace arookas {
 			}
 		}
 
+		int getUniformLocation(string name) {
+			int location;
+			if (!mUniformCache.TryGetValue(name, out location)) {
+				location = GL.GetUniformLocation(mProgram, name);
+				mUniformCache[name] = location;
+			}
+			return location;
+		}
+
 		public void setProgramInt(string name, int integer) {
 			if (mProgram == null) {
 				return;
 			}
-			var location = GL.GetUniformLocation(mProgram, name);
-			GL.Uniform1(location, integer);
+			GL.Uniform1(getUniformLocation(name), integer);
 		}
 
 		public void setProgramColor(string name, bloColor color) {
 			if (mProgram == null) {
 				return;
 			}
-			var location = GL.GetUniformLocation(mProgram, name);
-			GL.Uniform4(location, color);
+			GL.Uniform4(getUniformLocation(name), color);
 		}
 		public void setProgramColor(string name, Color4 color) {
 			if (mProgram == null) {
 				return;
 			}
-			var location = GL.GetUniformLocation(mProgram, name);
-			GL.Uniform4(location, color);
+			GL.Uniform4(getUniformLocation(name), color);
 		}
 
 		public void setProgramVector(string name, bloPoint vector) {
 			if (mProgram == null) {
 				return;
 			}
-			var location = GL.GetUniformLocation(mProgram, name);
-			GL.Uniform2(location, vector.x, vector.y);
+			GL.Uniform2(getUniformLocation(name), vector.x, vector.y);
 		}
 		public void setProgramVector(string name, Vector2 vector) {
 			if (mProgram == null) {
 				return;
 			}
-			var location = GL.GetUniformLocation(mProgram, name);
-			GL.Uniform2(location, vector);
+			GL.Uniform2(getUniformLocation(name), vector);
 		}
 		public void setProgramVector(string name, Vector2d vector) {
-			if (mProgram == null) {
-				return;
-			}
-			var location = GL.GetUniformLocation(mProgram, name);
-			GL.Uniform2(location, vector.X, vector.Y);
+			setProgramVector(name, (Vector2)vector);
 		}
 		public void setProgramVector(string name, Vector3 vector) {
 			if (mProgram == null) {
 				return;
 			}
-			var location = GL.GetUniformLocation(mProgram, name);
-			GL.Uniform3(location, vector);
+			GL.Uniform3(getUniformLocation(name), vector);
 		}
 		public void setProgramVector(string name, Vector3d vector) {
-			if (mProgram == null) {
-				return;
-			}
-			var location = GL.GetUniformLocation(mProgram, name);
-			GL.Uniform3(location, vector.X, vector.Y, vector.Z);
+			setProgramVector(name, (Vector3)vector);
 		}
 		public void setProgramVector(string name, Vector4 vector) {
 			if (mProgram == null) {
 				return;
 			}
-			var location = GL.GetUniformLocation(mProgram, name);
-			GL.Uniform4(location, vector);
+			GL.Uniform4(getUniformLocation(name), vector);
 		}
 		public void setProgramVector(string name, Vector4d vector) {
-			if (mProgram == null) {
-				return;
-			}
-			var location = GL.GetUniformLocation(mProgram, name);
-			GL.Uniform4(location, vector.X, vector.Y, vector.Z, vector.W);
+			setProgramVector(name, (Vector4)vector);
 		}
 
 		static bloContext sInstance;
