@@ -445,7 +445,7 @@ namespace arookas {
 			return GetEnumerator();
 		}
 
-		internal static uint convertStringToName(string str) {
+		public static uint convertStringToName(string str) {
 			var name = 0u;
 			for (int i = 0; i < str.Length; ++i) {
 				name <<= 8;
@@ -453,7 +453,7 @@ namespace arookas {
 			}
 			return name;
 		}
-		internal static string convertNameToString(uint name) {
+		public static string convertNameToString(uint name) {
 			if (name > 0xFFFFFFu) {
 				var chars = new char[4];
 				chars[0] = (char)((name >> 24) & 255);
