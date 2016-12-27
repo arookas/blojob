@@ -28,6 +28,58 @@ namespace arookas {
 			return x;
 		}
 
+		public static bool chase(ref int from, int to, int step) {
+			int distance = (to - from);
+			if (step < 0) {
+				step = -step;
+			}
+			if (distance > 0) {
+				distance -= step;
+				from = (distance > 0 ? (to - distance) : to);
+			} else {
+				distance += step;
+				from = (distance < 0 ? (to - distance) : to);
+			}
+			if (from == to) {
+				return false;
+			}
+			return true;
+		}
+		public static bool chase(ref float from, float to, float step) {
+			float distance = (to - from);
+			if (step < 0.0f) {
+				step = -step;
+			}
+			if (distance > 0.0f) {
+				distance -= step;
+				from = (distance > 0.0f ? (to - distance) : to);
+			} else {
+				distance += step;
+				from = (distance < 0.0f ? (to - distance) : to);
+			}
+			if (from == to) {
+				return false;
+			}
+			return true;
+		}
+		public static bool chase(ref double from, double to, double step) {
+			double distance = (to - from);
+			if (step < 0.0d) {
+				step = -step;
+			}
+			if (distance > 0.0d) {
+				distance -= step;
+				from = (distance > 0.0d ? (to - distance) : to);
+			} else {
+				distance += step;
+				from = (distance < 0.0d ? (to - distance) : to);
+			}
+			if (from == to) {
+				return false;
+			}
+			return true;
+		}
+
 	}
 
 }
