@@ -18,14 +18,32 @@ void main() {
 	if (transparency[0] == 0) {
 		output.a = 1.0;
 	}
-
-	for (int i = 1; i < textureCount; ++i) {
-		vec4 texel = texture2D(texture[i], uv);
-		if (transparency[i] == 0) {
+	
+	if (textureCount >= 2) {
+		vec4 texel = texture2D(texture[1], uv);
+		if (transparency[1] == 0) {
 			texel.a = 1.0;
 		}
-		output.rgb = mix(output.rgb, texel.rgb, blendColorFactor[i]);
-		output.a = mix(output.a, texel.a, blendAlphaFactor[i]);
+		output.rgb = mix(output.rgb, texel.rgb, blendColorFactor[1]);
+		output.a = mix(output.a, texel.a, blendAlphaFactor[1]);
+	}
+	
+	if (textureCount >= 3) {
+		vec4 texel = texture2D(texture[2], uv);
+		if (transparency[2] == 0) {
+			texel.a = 1.0;
+		}
+		output.rgb = mix(output.rgb, texel.rgb, blendColorFactor[1]);
+		output.a = mix(output.a, texel.a, blendAlphaFactor[1]);
+	}
+	
+	if (textureCount >= 4) {
+		vec4 texel = texture2D(texture[3], uv);
+		if (transparency[3] == 0) {
+			texel.a = 1.0;
+		}
+		output.rgb = mix(output.rgb, texel.rgb, blendColorFactor[3]);
+		output.a = mix(output.a, texel.a, blendAlphaFactor[3]);
 	}
 
 	if (fromColor != cZero || toColor != cOne) {
