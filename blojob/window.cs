@@ -347,8 +347,6 @@ namespace arookas {
 			var bottomLeftColor = bloMath.scaleAlpha(mTextures[cBottomLeft].color, mCumulativeAlpha);
 			var bottomRightColor = bloMath.scaleAlpha(mTextures[cBottomRight].color, mCumulativeAlpha);
 
-			GL.Disable(EnableCap.Texture2D);
-
 			GL.Begin(PrimitiveType.Quads);
 			GL.Color4(topLeftColor);
 			GL.Vertex3(mContentRect.left, mContentRect.top, 0.0d);
@@ -390,7 +388,6 @@ namespace arookas {
 
 			var whiteColor = bloMath.scaleAlpha(new bloColor(bloColor.cWhite), alpha);
 
-			GL.Enable(EnableCap.Texture2D);
 			mContentTexture.bind(0);
 
 			GL.Begin(PrimitiveType.Quads);
@@ -466,7 +463,6 @@ namespace arookas {
 
 				bloColor whiteColor = bloMath.scaleAlpha(new bloColor(bloColor.cWhite), alpha);
 
-				GL.Enable(EnableCap.Texture2D);
 				texture.bind(0);
 
 				GL.Begin(PrimitiveType.Quads);

@@ -25,7 +25,6 @@ namespace arookas {
 			GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, convertAnisotropy(maxAniso));
 		}
 		public static void loadTexObj(int textureName, int id) {
-			GL.Enable(EnableCap.Texture2D);
 			GL.ActiveTexture(TextureUnit.Texture0 + id);
 			GL.BindTexture(TextureTarget.Texture2D, textureName);
 		}

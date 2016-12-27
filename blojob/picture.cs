@@ -440,7 +440,6 @@ namespace arookas {
 			var bottomLeftColor = bloMath.scaleAlpha(mColors[cBottomLeft], mCumulativeAlpha);
 			var bottomRightColor = bloMath.scaleAlpha(mColors[cBottomRight], mCumulativeAlpha);
 
-			GL.Enable(EnableCap.Texture2D);
 			for (var i = 0; i < mTextures.Count; ++i) {
 				mTextures[0].texture.bind(i);
 			}

@@ -356,7 +356,6 @@ namespace arookas {
 		}
 
 		protected override void drawSelf() {
-			GL.Disable(EnableCap.Texture2D);
 			GL.Begin(PrimitiveType.Quads);
 			GL.Color4(mTintColor);
 			GL.Vertex3(mRect.left, mRect.top, 0.0d);
