@@ -250,6 +250,10 @@ namespace arookas {
 			}
 			return null;
 		}
+		public TPane search<TPane>(uint name)
+			where TPane : bloPane {
+			return (search(name) as TPane);
+		}
 
 		Vector2d getAnchorOffset() {
 			var anchor = new Vector2d();
