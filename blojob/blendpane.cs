@@ -41,15 +41,17 @@ namespace arookas {
 
 		public void setPaneBlend(int steps, bloTexture to, bloTexture from) {
 			var picture = (mPane as bloPicture);
-			if (from != null) {
-				picture.changeTexture(to, 0);
-				picture.changeTexture(from, 1);
-			} else {
-				picture.changeTexture(to, 0);
+			if (picture != null) {
+				if (from != null) {
+					picture.changeTexture(to, 0);
+					picture.changeTexture(from, 1);
+				} else {
+					picture.changeTexture(to, 0);
+				}
+				mBlendActive = true;
+				mBlendStep = (1.0d / steps);
+				mBlendTime = 0.0d;
 			}
-			mBlendActive = true;
-			mBlendStep = (1.0d / steps);
-			mBlendTime = 0.0d;
 		}
 
 	}
