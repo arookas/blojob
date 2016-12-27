@@ -32,6 +32,10 @@ namespace arookas {
 			mSizeActive = false;
 		}
 
+		public bloPane getPane() {
+			return mPane;
+		}
+
 		public virtual bool update() {
 			if (mPositionActive) {
 				if (mPositionTime > 1.0d) {

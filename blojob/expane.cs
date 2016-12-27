@@ -32,6 +32,10 @@ namespace arookas {
 			mAlphaActive = false;
 		}
 
+		public bloPane getPane() {
+			return mPane;
+		}
+
 		public bool update() {
 			if (mOffsetActive) {
 				if (mOffset.update()) {
