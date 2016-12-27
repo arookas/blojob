@@ -7,6 +7,7 @@ using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using System.Xml;
 
 namespace arookas {
@@ -454,30 +455,12 @@ namespace arookas {
 			return name;
 		}
 		public static string convertNameToString(uint name) {
-			if (name > 0xFFFFFFu) {
-				var chars = new char[4];
-				chars[0] = (char)((name >> 24) & 255);
-				chars[1] = (char)((name >> 16) & 255);
-				chars[2] = (char)((name >> 8) & 255);
-				chars[3] = (char)((name >> 0) & 255);
-				return new String(chars);
-			} else if (name > 0xFFFFu) {
-				var chars = new char[3];
-				chars[0] = (char)((name >> 16) & 255);
-				chars[1] = (char)((name >> 8) & 255);
-				chars[2] = (char)((name >> 0) & 255);
-				return new String(chars);
-			} else if (name > 0xFFu) {
-				var chars = new char[2];
-				chars[0] = (char)((name >> 8) & 255);
-				chars[1] = (char)((name >> 0) & 255);
-				return new String(chars);
-			} else if (name > 0u) {
-				var chars = new char[1];
-				chars[0] = (char)((name >> 0) & 255);
-				return new String(chars);
+			var builder = new StringBuilder(4);
+			while ((name & 255) != 0) {
+				builder.Insert(0, (char)(name & 255));
+				name >>= 8;
 			}
-			return "";
+			return builder.ToString();
 		}
 
 	}
