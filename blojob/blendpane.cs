@@ -16,8 +16,6 @@ namespace arookas {
 		}
 
 		void initialize() {
-			var picture = (mPane as bloPicture);
-			picture.insert(null, 1, 0.0d);
 			mBlendActive = false;
 			mBlendStep = 0.0d;
 			mBlendTime = 0.0d;
