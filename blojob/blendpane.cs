@@ -34,6 +34,8 @@ namespace arookas {
 				picture.setBlendFactor((1.0d - mBlendTime), 1);
 				picture.setBlendFactor(1.0d, 2);
 				picture.setBlendFactor(1.0d, 3);
+				picture.setBlendKonstColor();
+				picture.setBlendKonstAlpha();
 				mBlendTime += mBlendStep;
 			}
 			return (result && !mBlendActive);
