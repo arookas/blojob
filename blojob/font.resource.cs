@@ -159,7 +159,7 @@ namespace arookas {
 					mSheetIndex = sheetIndex;
 					mGlyphIndex = index;
 				}
-				gl.loadTexObj(mTextureName);
+				gl.loadTexObj(mTextureName, 0);
 			}
 		}
 
@@ -255,9 +255,11 @@ namespace arookas {
 			var context = bloContext.getContext();
 
 			context.useProgram();
+			context.setProgramInt("textureCount", 1);
+			context.setProgramInt("texture[0]", 0);
 			context.setProgramColor("fromColor", mFromColor);
 			context.setProgramColor("toColor", mToColor);
-			context.setProgramInt("transparency", 1);
+			context.setProgramInt("transparency[0]", 1);
 
 			WidthEntry widthEntry;
 			loadFont(character, out widthEntry);

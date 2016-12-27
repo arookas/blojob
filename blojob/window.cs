@@ -370,9 +370,11 @@ namespace arookas {
 			var context = bloContext.getContext();
 
 			context.useProgram();
+			context.setProgramInt("textureCount", 1);
+			context.setProgramInt("texture[0]", 0);
 			context.setProgramColor("fromColor", new bloColor(bloColor.cZero));
 			context.setProgramColor("toColor", new bloColor(bloColor.cOne));
-			context.setProgramInt("transparency", mContentTexture.getTransparency());
+			context.setProgramInt("transparency[0]", mContentTexture.getTransparency());
 
 			var hFactor = ((double)width / (double)mContentTexture.getWidth());
 			var vFactor = ((double)height / (double)mContentTexture.getHeight());
@@ -389,7 +391,7 @@ namespace arookas {
 			var whiteColor = bloMath.scaleAlpha(new bloColor(bloColor.cWhite), alpha);
 
 			GL.Enable(EnableCap.Texture2D);
-			mContentTexture.bind();
+			mContentTexture.bind(0);
 
 			GL.Begin(PrimitiveType.Quads);
 			GL.TexCoord2(sLeft, tTop);
@@ -451,9 +453,11 @@ namespace arookas {
 				var context = bloContext.getContext();
 
 				context.useProgram();
+				context.setProgramInt("textureCount", 1);
+				context.setProgramInt("texture[0]", 0);
 				context.setProgramColor("fromColor", fromColor);
 				context.setProgramColor("toColor", toColor);
-				context.setProgramInt("transparency", texture.getTransparency());
+				context.setProgramInt("transparency[0]", texture.getTransparency());
 
 				int left = x;
 				int top = y;
@@ -463,7 +467,7 @@ namespace arookas {
 				bloColor whiteColor = bloMath.scaleAlpha(new bloColor(bloColor.cWhite), alpha);
 
 				GL.Enable(EnableCap.Texture2D);
-				texture.bind();
+				texture.bind(0);
 
 				GL.Begin(PrimitiveType.Quads);
 				GL.TexCoord2(sLeft, tTop);

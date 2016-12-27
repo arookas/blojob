@@ -75,8 +75,8 @@ namespace arookas {
 			mLoadedGL = true;
 			return mTextureName;
 		}
-		public void bind() {
-			gl.loadTexObj(mTextureName);
+		public void bind(int id) {
+			gl.loadTexObj(mTextureName, id);
 		}
 
 		public void attachPalette(bloPalette palette) {

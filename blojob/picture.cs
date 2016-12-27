@@ -4,22 +4,25 @@ using arookas.Xml;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System;
+using System.Collections.Generic;
 using System.Xml;
 
 namespace arookas {
 
 	public class bloPicture : bloPane {
 
-		protected bloTexture mTexture;
+		protected List<TextureSlot> mTextures;
 		protected bloPalette mPalette;
 		protected bloBinding mBinding;
 		protected bloMirror mMirror;
 		protected bool mRotate90;
 		protected bloWrapMode mWrapS, mWrapT;
 		protected bloColor mFromColor, mToColor;
+		protected Vector4d mKonstColor, mKonstAlpha;
 		protected bloColor[] mColors;
 
 		public bloPicture() {
+			mTextures = new List<TextureSlot>(cTextureSlots);
 			mColors = new bloColor[4];
 			mFromColor = new bloColor(bloColor.cZero);
 			mToColor = new bloColor(bloColor.cOne);
@@ -30,7 +33,7 @@ namespace arookas {
 
 			var finder = bloResourceFinder.getFinder();
 
-			mTexture = finder.find<bloTexture>(reader, "timg");
+			mTextures.Add(new TextureSlot(finder.find<bloTexture>(reader, "timg")));
 			mPalette = finder.find<bloPalette>(reader, "tlut");
 
 			mBinding = (bloBinding)reader.Read8();
@@ -46,6 +49,9 @@ namespace arookas {
 			for (int i = 0; i < 4; ++i) {
 				mColors[i] = new bloColor(bloColor.cWhite);
 			}
+
+			setBlendKonstColor();
+			setBlendKonstAlpha();
 		}
 		protected override void loadBlo1(aBinaryReader reader) {
 			base.loadBlo1(reader);
@@ -53,7 +59,7 @@ namespace arookas {
 			var finder = bloResourceFinder.getFinder();
 
 			int numparams = reader.Read8();
-			mTexture = finder.find<bloTexture>(reader, "timg");
+			mTextures.Add(new TextureSlot(finder.find<bloTexture>(reader, "timg")));
 			mPalette = finder.find<bloPalette>(reader, "tlut");
 			mBinding = (bloBinding)reader.Read8();
 
@@ -103,13 +109,16 @@ namespace arookas {
 			}
 
 			reader.Skip(4);
+
+			setBlendKonstColor();
+			setBlendKonstAlpha();
 		}
 		protected override void loadXml(xElement element) {
 			base.loadXml(element);
 
 			var finder = bloResourceFinder.getFinder();
 
-			mTexture = finder.find<bloTexture>(element.Element("texture"), "timg");
+			mTextures.Add(new TextureSlot(finder.find<bloTexture>(element.Element("texture"), "timg")));
 			mPalette = finder.find<bloPalette>(element.Element("palette"), "tlut");
 
 			if (!Enum.TryParse<bloBinding>(element.Element("binding"), true, out mBinding)) {
@@ -139,6 +148,9 @@ namespace arookas {
 			mColors[cTopRight] = bloXml.loadColor(colors.Element("top-right"), white);
 			mColors[cBottomLeft] = bloXml.loadColor(colors.Element("bottom-left"), white);
 			mColors[cBottomRight] = bloXml.loadColor(colors.Element("bottom-right"), white);
+
+			setBlendKonstColor();
+			setBlendKonstAlpha();
 		}
 
 		public override void saveBlo1(aBinaryWriter writer) {
@@ -167,7 +179,7 @@ namespace arookas {
 			}
 
 			writer.Write8(numparams);
-			bloResource.save(mTexture, writer);
+			bloResource.save(mTextures[0].texture, writer);
 			bloResource.save(mPalette, writer);
 			writer.Write8((byte)mBinding);
 
@@ -213,7 +225,7 @@ namespace arookas {
 		public override void saveXml(XmlWriter writer) {
 			base.saveXml(writer);
 
-			bloResource.save(mTexture, "texture", writer);
+			bloResource.save(mTextures[0].texture, "texture", writer);
 			bloResource.save(mPalette, "palette", writer);
 			writer.WriteElementString("binding", mBinding.ToString());
 
@@ -255,8 +267,8 @@ namespace arookas {
 
 		protected override void loadGLSelf() {
 			base.loadGLSelf();
-			if (mTexture != null) {
-				mTexture.loadGL();
+			if (mTextures.Count > 0 && mTextures[0].texture != null) {
+				mTextures[0].texture.loadGL();
 			}
 		}
 
@@ -284,18 +296,20 @@ namespace arookas {
 
 				GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 			}
-			if (mTexture != null) {
+			if (mTextures.Count > 0 && mTextures[0].texture != null) {
 				drawSelf(0, 0, mRect.width, mRect.height, mBinding, mMirror, mRotate90, mWrapS, mWrapT);
 			}
 		}
 		void drawSelf(int x, int y, int width, int height, bloBinding binding, bloMirror mirror, bool rotate90, bloWrapMode wrapS, bloWrapMode wrapT) {
+
+			var texture = mTextures[0].texture;
 
 			// wrapping
 			int left = x;
 			int top = y;
 
 			if (wrapS == bloWrapMode.None) {
-				double cap = (rotate90 ? mTexture.getHeight() : mTexture.getWidth());
+				double cap = (rotate90 ? texture.getHeight() : texture.getWidth());
 				if (!binding.hasFlag(bloBinding.Left)) {
 					if (width > cap) {
 						left = (int)(
@@ -312,7 +326,7 @@ namespace arookas {
 			}
 
 			if (mWrapT == bloWrapMode.None) {
-				double cap = (rotate90 ? mTexture.getWidth() : mTexture.getHeight());
+				double cap = (rotate90 ? texture.getWidth() : texture.getHeight());
 				if (!binding.hasFlag(bloBinding.Top)) {
 					if (height > cap) {
 						top = (int)(
@@ -344,7 +358,7 @@ namespace arookas {
 
 			// U mapping
 			int rectWidth = (rotate90 ? height : width);
-			double texWidth = mTexture.getWidth();
+			double texWidth = texture.getWidth();
 			double widthFactor = (rectWidth / texWidth);
 			double fLeft, fRight;
 
@@ -361,7 +375,7 @@ namespace arookas {
 
 			// V mapping
 			int rectHeight = (rotate90 ? width : height);
-			double texHeight = mTexture.getHeight();
+			double texHeight = texture.getHeight();
 			double heightFactor = (rectHeight / texHeight);
 			double fTop, fBottom;
 
@@ -409,9 +423,15 @@ namespace arookas {
 			var context = bloContext.getContext();
 
 			context.useProgram();
+			context.setProgramInt("textureCount", mTextures.Count);
+			for (var i = 0; i < mTextures.Count; ++i) {
+				context.setProgramInt(String.Format("texture[{0}]", i), i);
+				context.setProgramInt(String.Format("transparency[{0}]", i), mTextures[i].texture.getTransparency());
+			}
+			context.setProgramVector("blendColorFactor", mKonstColor);
+			context.setProgramVector("blendAlphaFactor", mKonstAlpha);
 			context.setProgramColor("fromColor", mFromColor);
 			context.setProgramColor("toColor", mToColor);
-			context.setProgramInt("transparency", mTexture.getTransparency());
 
 			bloRectangle rect = new bloRectangle(x, y, (x + width), (y + height));
 
@@ -421,7 +441,9 @@ namespace arookas {
 			var bottomRightColor = bloMath.scaleAlpha(mColors[cBottomRight], mCumulativeAlpha);
 
 			GL.Enable(EnableCap.Texture2D);
-			mTexture.bind();
+			for (var i = 0; i < mTextures.Count; ++i) {
+				mTextures[0].texture.bind(i);
+			}
 
 			GL.Begin(PrimitiveType.Quads);
 			GL.TexCoord2(uvTopLeft);
@@ -442,13 +464,102 @@ namespace arookas {
 
 		}
 
+		public bool insert(bloTexture texture, int slot, double factor) {
+			if (texture == null) {
+				return false;
+			}
+			if (slot < 0 || slot >= cTextureSlots || slot > mTextures.Count) {
+				return false;
+			}
+			if (mTextures.Count >= cTextureSlots) {
+				return false;
+			}
+			if (mTextures.Count == 0) {
+				mRect.set(0, 0, texture.getWidth(), texture.getHeight());
+			}
+			mTextures.Insert(slot, new TextureSlot(texture, factor));
+			setBlendKonstColor();
+			setBlendKonstAlpha();
+			return true;
+		}
+		public bloTexture changeTexture(bloTexture texture, int slot) {
+			if (texture == null) {
+				return null;
+			}
+			if (slot < 0 || slot >= cTextureSlots || slot >= mTextures.Count) {
+				return null;
+			}
+			var old = mTextures[slot].texture;
+			mTextures[slot].texture = texture;
+			return old;
+		}
+		public bool remove(int slot) {
+			if (slot < 0 || slot >= cTextureSlots || slot >= mTextures.Count) {
+				return false;
+			}
+			mTextures.RemoveAt(slot);
+			setBlendKonstColor();
+			setBlendKonstAlpha();
+			return true;
+		}
+		
+		public void setBlendFactor(double factor, int slot) {
+			setBlendFactor(factor, factor, slot);
+		}
+		public void setBlendFactor(double colorFactor, double alphaFactor, int slot) {
+			setBlendColorFactor(colorFactor, slot);
+			setBlendAlphaFactor(alphaFactor, slot);
+		}
+		public void setBlendColorFactor(double factor, int slot) {
+			if (slot < 0 || slot >= cTextureSlots || slot >= mTextures.Count) {
+				return;
+			}
+			mTextures[slot].blendColorFactor = factor;
+		}
+		public void setBlendAlphaFactor(double factor, int slot) {
+			if (slot < 0 || slot >= cTextureSlots || slot >= mTextures.Count) {
+				return;
+			}
+			mTextures[slot].blendAlphaFactor = factor;
+		}
+
+		public void setBlendKonstColor() {
+			var konst = new double[4];
+			for (int slot = 1; slot < mTextures.Count; ++slot) {
+				double sum = 0.0d;
+				for (int prev = 0; prev < slot; ++prev) {
+					sum += mTextures[prev].blendColorFactor;
+				}
+				double factor = (mTextures[slot].blendColorFactor + sum);
+				if (factor != 0.0d) {
+					konst[slot] = (1.0d - (sum / factor));
+				}
+			}
+			mKonstColor = new Vector4d(konst[0], konst[1], konst[2], konst[3]);
+		}
+		public void setBlendKonstAlpha() {
+			var konst = new double[4];
+			for (int slot = 1; slot < mTextures.Count; ++slot) {
+				double sum = 0.0d;
+				for (int prev = 0; prev < slot; ++prev) {
+					sum += mTextures[prev].blendAlphaFactor;
+				}
+				double factor = (mTextures[slot].blendAlphaFactor + sum);
+				if (factor != 0.0d) {
+					konst[slot] = (1.0d - (sum / factor));
+				}
+			}
+			mKonstAlpha = new Vector4d(konst[0], konst[1], konst[2], konst[3]);
+		}
+
 		public override void info() {
 			base.info();
-			Console.WriteLine("Textured : {0}", (mTexture != null));
-			if (mTexture != null) {
-				Console.WriteLine("  Format : {0}", mTexture.getFormat());
-				Console.WriteLine("  Transparency : {0}", mTexture.getTransparency());
-				Console.WriteLine("  Size : {0}x{1}", mTexture.getWidth(), mTexture.getHeight());
+			var texture = (mTextures.Count > 0 ? mTextures[0].texture : null);
+			Console.WriteLine("Textured : {0}", (texture != null));
+			if (texture != null) {
+				Console.WriteLine("  Format : {0}", texture.getFormat());
+				Console.WriteLine("  Transparency : {0}", texture.getTransparency());
+				Console.WriteLine("  Size : {0}x{1}", texture.getWidth(), texture.getHeight());
 			}
 			Console.WriteLine("Paletted : {0}", (mPalette != null));
 			if (mPalette != null) {
@@ -477,6 +588,35 @@ namespace arookas {
 		protected const int cTopRight = 1;
 		protected const int cBottomLeft = 2;
 		protected const int cBottomRight = 3;
+
+		protected const int cTextureSlots = 4;
+
+		protected class TextureSlot {
+
+			public bloTexture texture;
+			public double blendColorFactor;
+			public double blendAlphaFactor;
+
+			public TextureSlot() {
+				// empty
+			}
+			public TextureSlot(bloTexture texture) {
+				this.texture = texture;
+				this.blendColorFactor = 1.0d;
+				this.blendAlphaFactor = 1.0d;
+			}
+			public TextureSlot(bloTexture texture, double factor) {
+				this.texture = texture;
+				this.blendColorFactor = factor;
+				this.blendAlphaFactor = factor;
+			}
+			public TextureSlot(bloTexture texture, double colorFactor, double alphaFactor) {
+				this.texture = texture;
+				this.blendColorFactor = colorFactor;
+				this.blendAlphaFactor = alphaFactor;
+			}
+
+		}
 
 	}
 
