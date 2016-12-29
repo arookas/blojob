@@ -45,21 +45,21 @@ namespace arookas {
 						Console.WriteLine(">>> Unknown '{0:X4}' section at 0x{1:X6}", typeID, start);
 						return false;
 					}
-					case 0: {
+					case cExitID: {
 						return true;
 					}
-					case 2: {
+					case cEndID: {
 						reader.Step(2);
 						return true;
 					}
-					case 1: {
+					case cBeginID: {
 						reader.Step(2);
 						if (!loadCompact(lastPane, reader)) {
 							return false;
 						}
 						break;
 					}
-					case 16: {
+					case cPaneID: {
 						lastPane = new bloPane();
 						lastPane.load(parent, reader, bloFormat.Compact);
 						if (parent is bloScreen) {
@@ -69,17 +69,17 @@ namespace arookas {
 						}
 						break;
 					}
-					case 17: {
+					case cWindowID: {
 						lastPane = new bloWindow();
 						lastPane.load(parent, reader, bloFormat.Compact);
 						break;
 					}
-					case 18: {
+					case cPictureID: {
 						lastPane = new bloPicture();
 						lastPane.load(parent, reader, bloFormat.Compact);
 						break;
 					}
-					case 19: {
+					case cTextboxID: {
 						lastPane = new bloTextbox();
 						lastPane.load(parent, reader, bloFormat.Compact);
 						break;
@@ -387,6 +387,14 @@ namespace arookas {
 		const uint cBGN1 = 0x42474E31u; // 'BGN1'
 		const uint cEND1 = 0x454E4431u; // 'END1'
 		const uint cEXT1 = 0x45585431u; // 'EXT1'
+
+		const ushort cExitID = 0;
+		const ushort cBeginID = 1;
+		const ushort cEndID = 2;
+		const ushort cPaneID = 16;
+		const ushort cWindowID = 17;
+		const ushort cPictureID = 18;
+		const ushort cTextboxID = 19;
 
 	}
 }
