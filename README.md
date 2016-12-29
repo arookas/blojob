@@ -3,15 +3,23 @@
 
 ### Summary
 
-_blojob_ is a simple, to-the-point BLO toolset for various GameCube games.
-It is designed to be as accurate as possible, but comes without the ability to edit.
-It is written in C#, utilizes OpenTK's GameWindow class for rendering, and supports all of the BLO elements from the BLO1 and BLO0 formats:
+_blojob_ is a simple, to&#8209;the&#8209;point BLO toolset for various GameCube games.
+At its core, it is an API for loading, saving, rendering, and manipulating BLO elements.
+Tools are included to view and convert BLO files.
+_blojob_ has support for the following:
 
-- Panes
-- Pictures
-- Windows
-- Textboxes (including fonts)
-- Screens
+- Supports all BLO elements (panes, pictures, windows, textboxes, screens)
+- Able to load textures, palettes, and fonts in their native formats
+- Text rendering (with support for all ESC codes)
+- Gradient mapping, translucency, and multitexturing
+
+The various formats supported by the library are as follows:
+
+|Format|Load|Save|Description|
+|------|----|----|-----------|
+|compact|&#x2713;|&#x2713;|"Compact", or "BLO0", format used in Pikmin 1. Very limited and cannot set most properties.|
+|blo1|&#x2713;|&#x2713;|The standard "BLO1" format used by Wind Waker, Super Mario Sunshine, and Luigi's Mansion. Can set almost all properties.|
+|xml|&#x2713;|&#x2713;|A custom, XML-based text format, allowing for easier editing. See [here](xml-specs.md) for documentation on this format. Can set all properties.|
 
 ### Compiling
 
@@ -37,18 +45,16 @@ Once built, there will be a several executables:
 
 #### pablo
 
-The viewer, _pablo_, has a very simple command-line interface allowing drag&#8209;and&#8209;drop usage, as well as direct command&#8209;prompt usage for more configuration.
-The parameters are as follows:
-
-```
-pablo <input-file> [<format> [<search-path> [...]]]
-```
+The viewer, _pablo_, has a very simple command-line interface allowing drag&#8209;and&#8209;drop usage, as well as direct command&#8209;line usage for more configuration.
+It utilizes OpenTK's GameWindow class for rendering.
+In drag&#8209;and&#8209;drop mode, you can load a single BLO1-format file.
+The command-line parameters are as follows:
 
 |Parameter|Description|
 |---------|-----------|
-|&lt;input&#8209;file&gt;|The path to the BLO file to view. This is the only required parameter, allowing drag&#8209;and&#8209;drop with default configuration. May be a relative or absolute path.|
-|&lt;format&gt;|Allows you to specify the format of the input BLO file. By default, this is assumed to be the BLO1 format. The possible values are: _compact_, _blo1_, _xml_.|
-|&lt;search&#8209;path&gt;|Adds a fallback global search path to the resource finder. This is used to find texture, fonts, palettes, and other files referenced from within the BLO file. You may specify any number of search paths.|
+|-input _file_ _format_|Specifies the input BLO file and format. This is the only required parameter. _file_ may be a relative or absolute path. _format_ is optional, defaulting to BLO1.|
+|-search-paths _path_ ...|Adds a fallback global search path to the resource finder. This is used to find texture, fonts, palettes, and other files referenced from within the BLO file. You may specify any number of search paths.|
+|-display-size _width _height_|Resizes the viewer display to the specified dimensions. Useful to crop the view to the actual game's dimensions. The BLO will be centered with no scaling. By default, the BLO's dimensions are used.|
 
 Once the BLO is loaded, you may use various keys to toggle certain rendering flags:
 
@@ -59,18 +65,13 @@ Once the BLO is loaded, you may use various keys to toggle certain rendering fla
 
 #### joblo
 
-The converter, _joblo_, does not support drag&#8209;and&#8209;drop usage. It takes at least four parameters as follows:
-
-```
-joblo <input-file> <input-format> <output-file> <output-format> [<search-path> [...]]
-```
+The converter, _joblo_, does not support drag&#8209;and&#8209;drop usage.
+The command-line parameters are as follows:
 
 |Parameter|Description|
 |---------|-----------|
-|&lt;input&#8209;file&gt;|The path to the BLO file to convert. May be a relative or absolute path. Must not be the same as &lt;output&#8209;file&gt;.|
-|&lt;input&#8209;format&gt;|Specifies the format of the input file. The possible values are: _compact_, _blo1_, _xml_.|
-|&lt;output&#8209;file&gt;|The path to which to save the converted BLO. May be relative or absolute. Must not be the same as &lt;input&#8209;file&gt;|
-|&lt;output&#8209;format&gt;|Specifies the format to which to convert the input file. The possible values are: _compact_, _blo1_, _xml_.|
-|&lt;search&#8209;path&gt;|Adds a fallback global search path to the resource finder. This is used to find texture, fonts, palettes, and other files referenced from within the BLO file. You may specify any number of search paths.|
+|-input _file_ _format_|The path and format of the BLO file to convert. _file_ may be a relative or absolute path and cannot not be the same as the output. _format_ is optional, defaulting to BLO1.|
+|-output _file_ _format_|Specifies the format and path to which to convert the input file. _file_ may be a relative or absolute path and cannot not be the same as the input. _format_ is optional, default to BLO1.|
+|-search-paths _path_ ...|Adds a fallback global search path to the resource finder. This is used to find texture, fonts, palettes, and other files referenced from within the BLO file. You may specify any number of search paths.|
 
-> **Note:** If both &lt;input&#8209;format&gt; and &lt;output&#8209;format&gt; are the same value, joblo performs a basic file-copy operation with no conversion performed.
+> **Note:** If both the input and output formats are the same, _joblo_ performs a basic file-copy operation with no conversion performed.
