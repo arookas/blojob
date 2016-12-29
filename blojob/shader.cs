@@ -20,7 +20,7 @@ namespace arookas {
 		public glShader this[ShaderType type] {
 			get { return mShaders.FirstOrDefault(shader => shader.getShaderType() == type); }
 		}
-		public int this[ProgramParameter parameter] {
+		public int this[GetProgramParameterName parameter] {
 			get {
 				int value;
 				GL.GetProgram(mId, parameter, out value);
@@ -43,7 +43,7 @@ namespace arookas {
 		}
 		public void link() {
 			GL.LinkProgram(mId);
-			if (this[ProgramParameter.LinkStatus] != 1) {
+			if (this[GetProgramParameterName.LinkStatus] != 1) {
 				throw new InvalidOperationException(String.Format("The GLProgram failed to be linked. The info log is:\n{0}", getInfoLog()));
 			}
 		}
@@ -57,7 +57,7 @@ namespace arookas {
 			if (!mDisposed) {
 				int status;
 				GL.DeleteProgram(mId);
-				GL.GetProgram(mId, ProgramParameter.DeleteStatus, out status);
+				GL.GetProgram(mId, GetProgramParameterName.DeleteStatus, out status);
 				if (status != 1) {
 					throw new InvalidOperationException("The GL program failed to be deleted.");
 				}
