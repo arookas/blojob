@@ -122,7 +122,7 @@ namespace arookas {
 			}
 
 			mName = convertStringToName(element.Attribute("id") | "");
-			mConnectParent = (element.Attribute("connect") | false);
+			setConnectParent(element.Attribute("connect") | false);
 			mVisible = (element.Attribute("visible") | true);
 			mRect = bloXml.loadRectangle(element.Element("rectangle"));
 			mAngle = ((element.Element("angle") | 0) % 360);
