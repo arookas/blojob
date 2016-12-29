@@ -153,7 +153,7 @@ namespace arookas {
 			setBlendKonstAlpha();
 		}
 
-		public virtual void saveCompact(aBinaryWriter writer) {
+		public override void saveCompact(aBinaryWriter writer) {
 			base.saveCompact(writer);
 
 			if (mTextures.Count > 0) {
