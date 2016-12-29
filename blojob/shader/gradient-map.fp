@@ -33,8 +33,8 @@ void main() {
 		if (transparency[2] == 0) {
 			texel.a = 1.0;
 		}
-		output.rgb = mix(output.rgb, texel.rgb, blendColorFactor[1]);
-		output.a = mix(output.a, texel.a, blendAlphaFactor[1]);
+		output.rgb = mix(output.rgb, texel.rgb, blendColorFactor[2]);
+		output.a = mix(output.a, texel.a, blendAlphaFactor[2]);
 	}
 	
 	if (textureCount >= 4) {
