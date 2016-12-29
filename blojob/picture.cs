@@ -597,38 +597,6 @@ namespace arookas {
 			mKonstAlpha = new Vector4d(konst[0], konst[1], konst[2], konst[3]);
 		}
 
-		public override void info() {
-			base.info();
-			var texture = (mTextures.Count > 0 ? mTextures[0].texture : null);
-			Console.WriteLine("Textured : {0}", (texture != null));
-			if (texture != null) {
-				Console.WriteLine("  Format : {0}", texture.getFormat());
-				Console.WriteLine("  Transparency : {0}", texture.getTransparency());
-				Console.WriteLine("  Size : {0}x{1}", texture.getWidth(), texture.getHeight());
-			}
-			Console.WriteLine("Paletted : {0}", (mPalette != null));
-			if (mPalette != null) {
-				Console.WriteLine("  Format : {0}", mPalette.getFormat());
-				Console.WriteLine("  Entry Count : {0}", mPalette.getEntryCount());
-			}
-			Console.Write("Orientation :");
-			if (mMirror.hasFlag(bloMirror.X)) {
-				Console.Write(" (MirrorX)");
-			}
-			if (mMirror.hasFlag(bloMirror.Y)) {
-				Console.Write(" (MirrorY)");
-			}
-			if (mRotate90) {
-				Console.Write(" (Rotate90)");
-			}
-			Console.WriteLine();
-			Console.WriteLine("Wrap S/T : {0} / {1}", mWrapS, mWrapT);
-			Console.WriteLine("Colors : {0:X8} {1:X8} {2:X8} {3:X8}", mColors[cTopLeft].rgba, mColors[cTopRight].rgba, mColors[cBottomLeft].rgba, mColors[cBottomRight].rgba);
-			if (mFromColor.rgba != bloColor.cZero || mToColor.rgba != bloColor.cOne) {
-				Console.WriteLine("Gradient : {0:X8} > {1:X8}", mFromColor.rgba, mToColor.rgba);
-			}
-		}
-
 		protected const int cTopLeft = 0;
 		protected const int cTopRight = 1;
 		protected const int cBottomLeft = 2;

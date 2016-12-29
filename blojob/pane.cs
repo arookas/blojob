@@ -251,6 +251,7 @@ namespace arookas {
 		public virtual void reform(int left, int top, int right, int bottom) {
 			mRect.reform(left, top, right, bottom);
 		}
+
 		public virtual bloPane search(uint name) {
 			if (mName == name) {
 				return this;
@@ -431,29 +432,6 @@ namespace arookas {
 		public virtual bool setConnectParent(bool set) {
 			mConnectParent = false;
 			return false;
-		}
-
-		public virtual void info() {
-			Console.WriteLine("Name : 0x{0:X8} '{1}{2}{3}{4}'", mName, (char)((mName >> 24) & 255), (char)((mName >> 16) & 255), (char)((mName >> 8) & 255), (char)((mName >> 0) & 255));
-			Console.Write("Rectangle :");
-			Console.Write(" {0}, {1}, {2}, {3}", mRect.left, mRect.top, mRect.right, mRect.bottom);
-			Console.Write(" ({0}, {1}) : ({2}x{3})", mRect.left, mRect.top, mRect.width, mRect.height);
-			Console.WriteLine();
-			if (mAngle != 0.0d) {
-				Console.WriteLine("Angle : {1:N2}°", mAngle);
-			}
-			Console.WriteLine("Anchor : {0}", mAnchor);
-			Console.WriteLine("Cull Mode : {0}", mCullMode);
-			Console.WriteLine("Alpha : {0:P1}", (mAlpha / 255.0d));
-			Console.WriteLine("Visible : {0}", mVisible);
-			Console.Write("Flags :");
-			if (mInheritAlpha) {
-				Console.Write(" (inherit alpha)");
-			}
-			if (mConnectParent) {
-				Console.Write(" (connect parent)");
-			}
-			Console.WriteLine();
 		}
 
 		public IEnumerator<bloPane> GetEnumerator() {
