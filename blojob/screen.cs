@@ -292,7 +292,7 @@ namespace arookas {
 			writer.Write32(blockcount);
 			writer.Goto(blockend);
 		}
-		void saveBlo1(bloPane pane, aBinaryWriter writer, ref uint blockcount) {
+		static void saveBlo1(bloPane pane, aBinaryWriter writer, ref uint blockcount) {
 			var typeID = cPAN1;
 
 			if (pane is bloTextbox) {
@@ -365,7 +365,7 @@ namespace arookas {
 			writer.WriteEndDocument();
 			writer.Close();
 		}
-		void saveXml(bloPane pane, XmlWriter writer) {
+		static void saveXml(bloPane pane, XmlWriter writer) {
 			var typeID = "pane";
 
 			if (pane is bloTextbox) {
