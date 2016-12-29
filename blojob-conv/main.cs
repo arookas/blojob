@@ -68,6 +68,7 @@ namespace arookas {
 
 			using (var stream = File.Create(outputfile)) {
 				switch (outputformat) {
+					case bloFormat.Compact: screen.saveCompact(stream); break;
 					case bloFormat.Blo1: screen.saveBlo1(stream); break;
 					case bloFormat.Xml: screen.saveXml(stream); break;
 					default: {
