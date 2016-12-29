@@ -224,6 +224,38 @@ namespace arookas {
 			}
 		}
 
+		public void saveCompact(Stream stream) {
+			aBinaryWriter writer = new aBinaryWriter(stream, Endianness.Big, Encoding.GetEncoding(1252));
+
+			foreach (var childpane in this) {
+				saveCompact(childpane, writer);
+			}
+
+			writer.Write16(cExitID);
+		}
+		static void saveCompact(bloPane pane, aBinaryWriter writer) {
+			var typeID = cPaneID;
+
+			if (pane is bloTextbox) {
+				typeID = cTextboxID;
+			} else if (pane is bloWindow) {
+				typeID = cWindowID;
+			} else if (pane is bloPicture) {
+				typeID = cPictureID;
+			}
+
+			writer.Write16(typeID);
+			pane.saveCompact(writer);
+
+			if (pane.getChildPane() > 0) {
+				writer.Write16(cBeginID);
+				foreach (var childpane in pane) {
+					saveCompact(childpane, writer);
+				}
+				writer.Write16(cEndID);
+			}
+		}
+
 		public void saveBlo1(Stream stream) {
 			aBinaryWriter writer = new aBinaryWriter(stream, Endianness.Big, Encoding.GetEncoding(1252));
 

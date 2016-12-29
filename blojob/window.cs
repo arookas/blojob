@@ -172,6 +172,32 @@ namespace arookas {
 			}
 		}
 
+		public override void saveCompact(aBinaryWriter writer) {
+			base.saveCompact(writer);
+
+			writer.Write16((ushort)mContentRect.left);
+			writer.Write16((ushort)mContentRect.top);
+			writer.Write16((ushort)mContentRect.width);
+			writer.Write16((ushort)mContentRect.height);
+
+			for (int i = 0; i < 4; ++i) {
+				bloResource.save(mTextures[i].texture, writer);
+			}
+			bloResource.save(mPalette, writer);
+
+			byte bits = 0;
+			for (int i = 0; i < 4; ++i) {
+				bits <<= 2;
+				bits |= (byte)mTextures[i].mirror;
+			}
+			writer.Write8(bits);
+
+			for (int i = 0; i < 4; ++i) {
+				writer.Write32(mTextures[i].color.rgba);
+			}
+
+			writer.WritePadding(4, 0);
+		}
 		public override void saveBlo1(aBinaryWriter writer) {
 			base.saveBlo1(writer);
 

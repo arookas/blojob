@@ -133,6 +133,19 @@ namespace arookas {
 			mInheritAlpha = (element.Element("alpha").Attribute("inherit") | true);
 		}
 
+		public virtual void saveCompact(aBinaryWriter writer) {
+			if (writer == null) {
+				throw new ArgumentNullException("writer");
+			}
+
+			writer.Write8((byte)(mVisible ? 1 : 0));
+			writer.Write8(0); // padding
+			writer.Write32(mName);
+			writer.WriteS16((short)mRect.left);
+			writer.WriteS16((short)mRect.top);
+			writer.WriteS16((short)mRect.width);
+			writer.WriteS16((short)mRect.height);
+		}
 		public virtual void saveBlo1(aBinaryWriter writer) {
 			if (writer == null) {
 				throw new ArgumentNullException("writer");

@@ -153,6 +153,32 @@ namespace arookas {
 			setBlendKonstAlpha();
 		}
 
+		public virtual void saveCompact(aBinaryWriter writer) {
+			base.saveCompact(writer);
+
+			if (mTextures.Count > 0) {
+				bloResource.save(mTextures[0].texture, writer);
+			} else {
+				bloResource.save(null, writer);
+			}
+			bloResource.save(mPalette, writer);
+
+			writer.Write8((byte)mBinding);
+
+			byte bits = 0;
+			bits |= (byte)mWrapS;
+			bits <<= 1;
+			bits |= (byte)(mRotate90 ? 1 : 0);
+			bits <<= 2;
+			bits |= (byte)mMirror;
+			writer.Write8(bits);
+
+			writer.WritePadding(4, 0);
+
+			for (int i = 0; i < 4; ++i) {
+				writer.Write32(mColors[i].rgba);
+			}
+		}
 		public override void saveBlo1(aBinaryWriter writer) {
 			base.saveBlo1(writer);
 
