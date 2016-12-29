@@ -21,10 +21,6 @@ namespace arookas {
 			mBlendTime = 0.0d;
 		}
 
-		public bloPane getPane() {
-			return mPane;
-		}
-
 		public override bool update() {
 			bool result = base.update();
 			if (mBlendActive) {
