@@ -45,6 +45,7 @@ namespace arookas {
 
 	[Flags]
 	public enum bloMirror {
+		None = 0,
 		Y = (1 << 0),
 		X = (1 << 1),
 	}
