@@ -54,7 +54,7 @@ The command-line parameters are as follows:
 |---------|-----------|
 |-input _file_ _format_|Specifies the input BLO file and format. This is the only required parameter. _file_ may be a relative or absolute path. _format_ is optional, defaulting to BLO1.|
 |-search-paths _path_ ...|Adds a fallback global search path to the resource finder. This is used to find texture, fonts, palettes, and other files referenced from within the BLO file. You may specify any number of search paths.|
-|-display-size _width _height_|Resizes the viewer display to the specified dimensions. Useful to crop the view to the actual game's dimensions. The BLO will be centered with no scaling. By default, the BLO's dimensions are used.|
+|-display-size _width_ _height_|Resizes the viewer display to the specified dimensions. Useful to crop the view to the actual game's dimensions. The BLO will be centered with no scaling. By default, the BLO's dimensions are used.|
 
 Once the BLO is loaded, you may use various keys to toggle certain rendering flags:
 
