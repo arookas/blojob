@@ -72,7 +72,7 @@ uniform vec4 toColor;
 ```
 
 |Uniform|Description|
-|-|-|
+|-------|-----------|
 |texture|An array of 4 `sampler2D` for multitexturing. Only `textureCount` samplers are guaranteed to be valid.|
 |blendColorFactor|The blend factors for the RGB components. These are pre-normalized, where `blendColorFactor[n]` represents the mix percentage between the previous color and `texture[n]`.|
 |blendAlphaFactor|The blend factors for the alpha components. These are pre-normalized, where `blendAlphaFactor[n]` represents the mix percentage between the previous alpha and `texture[n]`.|

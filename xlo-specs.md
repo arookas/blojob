@@ -54,7 +54,7 @@ The default value is specified in the property description.
 You may specify a rectangle by its position and size:
 
 |Property|Type|Description|
-|-|-|-|
+|--------|----|-----------|
 |&lt;x&gt;|integer|X position of the rectangle.|
 |&lt;y&gt;|integer|Y position of the rectangle.|
 |&lt;width&gt;|integer|Width of the rectangle.|
@@ -63,7 +63,7 @@ You may specify a rectangle by its position and size:
 A rectangle may also be specified by its edges:
 
 |Property|Type|Description|
-|-|-|-|
+|--------|----|-----------|
 |&lt;left&gt;|integer|Left edge of the rectangle.|
 |&lt;top&gt;|integer|Top edge of the rectangle.|
 |&lt;right&gt;|integer|Right edge the rectangle.|
@@ -79,7 +79,7 @@ If the property element contains a &lt;r&gt;, &lt;g&gt;, and &lt;b&gt; element, 
 Otherwise, the color is specified as a single positive hexadecimal integer. The number of digits in the hexadecimal integer change the format of the color value, ranging from 1&#8209;8 digits. Any number of digits outside of this range is considered invalid and the default color value is assigned to the property.
 
 |Digits|Format|
-|-|-|
+|------|------|
 |1|A4, white|
 |2|A8, white|
 |3|RGB4|
@@ -100,7 +100,7 @@ _C<sub>dst</sub>_ = _C<sub>from</sub>_ × (1 - _C<sub>src</sub>_) + _C<sub>to</s
 Gradient mapping is performed after multitexturing but before applying the vertex colors.
 
 |Property|Type|Description|
-|-|-|-|
+|--------|----|-----------|
 |&lt;from&gt;|color|Specifies the first point of the color, used where the source component is zero.|
 |&lt;to&gt;|color|Specifies the last point of the color, used where the source component is 255.|
 
@@ -112,7 +112,7 @@ The _scope_ attribute defines at what scope to begin searching for the resource.
 The default value is a null reference (i.e. no resource).
 
 |Scope|Description|
-|-|-|
+|-----|-----------|
 |none|Null reference (i.e. no resource). Text may be empty. You may also simply omit the property element.|
 |localdirectory|The resource is relative to certain directory in the XLO's containing directory. The specified directory depends on the property.|
 |localarchive|The resource is relative to the XLO's containing directory.|
@@ -143,7 +143,7 @@ It defines the position, dimensions, rotation, translucency, and other display p
 The following properties are specified as XML attributes:
 
 |Property|Type|Description|
-|-|-|-|
+|--------|----|-----------|
 |id|string|Name of the pane. Default is no name (empty string). Used to reference and find elements at runtime. If more than four characters are given, only the first four are used. Each must be ASCII characters in the 0&#8209;255 range.|
 |visible|boolean|Whether the element is visible by default. Defaults to "true".|
 |connect|boolean|Whether to connect the pane to its parent element. While this affects nothing for most element types, certain types of elements may use it.|
@@ -151,7 +151,7 @@ The following properties are specified as XML attributes:
 The following properties are specified as XML elements:
 
 |Property|Type|Description|
-|-|-|-|
+|--------|----|-----------|
 |&lt;rectangle&gt;|rectangle|Display rectangle of the pane. Default is an empty rectangle.|
 |&lt;angle&gt;|integer|Rotation angle, in degrees clockwise. The value wraps around 0&#8209;360. Defaults to zero (no rotation).|
 |&lt;anchor&gt;|enum|Sets the anchor, or origin, of the pane. The pane's rectangle will be positioned around this point. Defaults to the top-left corner.|
@@ -161,7 +161,7 @@ The following properties are specified as XML elements:
 The available anchors are as follows:
 
 |Enum|Description|
-|-|-|
+|----|-----------|
 |topleft|Top-left corner of the pane.|
 |topmiddle|Top edge of the pane.|
 |topright|Top-right corner of the pane.|
@@ -175,7 +175,7 @@ The available anchors are as follows:
 The available culling modes are as follows:
 
 |Enum|Description|
-|-|-|
+|----|-----------|
 |none|Neither side of the pane is culled.|
 |front|The front side of the pane is culled.|
 |back|The back side of the pane is culled.|
@@ -191,7 +191,7 @@ Picture elements inherit from pane, so all pane properties also apply here.
 The following properties are specified as XML elements:
 
 |Property|Type|Description|
-|-|-|-|
+|--------|----|-----------|
 |&lt;texture&gt;|resource, timg|The BTI texture of the element.|
 |&lt;palette&gt;|resource, tlut|The external palette to attach the to above texture. If null, the texture's embedded palette is used.|
 |&lt;binding&gt;|flags|Specifies which edges of the quad to which the corresponding edges of the texture should be bound, or "pegged".|
@@ -205,7 +205,7 @@ The following properties are specified as XML elements:
 The available binding flags are as follows:
 
 |Flag|Description|
-|-|-|
+|----|-----------|
 |left|Bind the left edge of the texture to the left edge of the quad.|
 |top|Bind the top edge of the texture to the top edge of the quad.|
 |right|Bind the right edge of the texture to the right edge of the quad.|
@@ -214,7 +214,7 @@ The available binding flags are as follows:
 The available mirroring flags are as follows:
 
 |Flag|Description|
-|-|-|
+|----|-----------|
 |none|Neither axes are mirrored.|
 |x|The texture's horizontal axis is mirrored.|
 |y|The texture's vertical axis is mirrored.|
@@ -222,7 +222,7 @@ The available mirroring flags are as follows:
 The available wrapping modes are as follows:
 
 |Enum|Description|
-|-|-|
+|----|-----------|
 |None|Texture is not wrapped to fill the quad.|
 |Clamp|Texture uses clamp wrapping to fill the quad.|
 |Repeat|Texture is repeated to fill the quad.|
@@ -231,7 +231,7 @@ The available wrapping modes are as follows:
 #### &lt;colors&gt;
 
 |Property|Type|Description|
-|-|-|-|
+|--------|----|-----------|
 |top-left|color|The color for the top-left corner of the picture. Defaults to opaque white.|
 |top-right|color|The color for the top-right corner of the picture. Defaults to opaque white.|
 |bottom-left|color|The color for the bottom-left corner of the picture. Defaults to opaque white.|
@@ -248,7 +248,7 @@ Window elements inherit from pane, so all pane properties also apply here.
 The following properties are specified as XML elements:
 
 |Property|Type|Description|
-|-|-|-|
+|--------|----|-----------|
 |&lt;content&gt;||Defines the properties of the content rectangle, such as dimensions and texture.|
 |&lt;palette&gt;|resource, tlut|Specifies the external palette to attach to the textures. If not specified, the texture's embedded palette is used.|
 |&lt;corners&gt;||Defines the properties of each corner, such as texture, color, and mirroring.|
@@ -257,7 +257,7 @@ The following properties are specified as XML elements:
 #### &lt;content&gt;
 
 |Property|Type|Description|
-|-|-|-|
+|--------|----|-----------|
 |&lt;rectangle&gt;|rectangle|Specifies the dimensions of the content rectangle, relative to the window's rectangle.|
 |&lt;texture&gt;|resource, timg|Specifies the optional BTI texture used to fill the content rectangle. |
 
@@ -269,7 +269,7 @@ Each should at least be given a texture; windows cannot render if at least one c
 For each corner, the properties are as follows:
 
 |Property|Type|Description|
-|-|-|-|
+|--------|----|-----------|
 |&lt;texture&gt;|resource, timg|Specifies the BTI texture of this corner.|
 |&lt;color&gt;|color|Specifies the blend color of the corner. Default is opaque white.|
 |&lt;mirror&gt;|enum|Specifies the axes of the texture to mirror. Defaults to _none_.|
@@ -277,7 +277,7 @@ For each corner, the properties are as follows:
 The available mirroring flags are as follows:
 
 |Flag|Description|
-|-|-|
+|----|-----------|
 |none|Neither axes are mirrored.|
 |x|The texture's horizontal axis is mirrored.|
 |y|The texture's vertical axis is mirrored.|
@@ -290,7 +290,7 @@ Textbox elements inherit from pane, so all pane properties also apply here.
 The following properties are specified as XML elements:
 
 |Property|Type|Description|
-|-|-|-|
+|--------|----|-----------|
 |&lt;font&gt;|resource, font|The BFN font resource to use for rendering the text.|
 |&lt;text&gt;|string|The default text buffer for the textbox. May be overriden at runtime. |
 |&lt;colors&gt;||Specifies the vertex colors for each corner of the quad. Each defaults to opaque white.|
@@ -301,21 +301,21 @@ The following properties are specified as XML elements:
 #### &lt;colors&gt;
 
 |Property|Type|Description|
-|-|-|-|
+|--------|----|-----------|
 |top|color|The color for the top edge of the glyphs. Defaults to opaque white.|
 |bottom|color|The color for the bottom edge of the glyphs. Defaults to opaque white.|
 
 #### &lt;binding&gt;
 
 |Property|Type|Description|
-|-|-|-|
+|--------|----|-----------|
 |horizontal|enum|Specifies the horizontal binding of the text. Defaults to left-alignment.|
 |vertical|enum|Specifies the vertical binding of the text. Defaults to left-alignment.|
 
 The available horizontal bindings are as follows:
 
 |Enum|Description|
-|-|-|
+|----|-----------|
 |left|Align each line to the left edge of the textbox.|
 |center|Center each line in the textbox.|
 |right|Align each line to the right edge of the textbox.|
@@ -323,7 +323,7 @@ The available horizontal bindings are as follows:
 The available vertical bindings are as follows:
 
 |Enum|Description|
-|-|-|
+|----|-----------|
 |top|Align the text to the top edge of the textbox.|
 |center|Center the text vertically in the textbox.|
 |right|Align the text to the bottom edge of the textbox.|
@@ -331,7 +331,7 @@ The available vertical bindings are as follows:
 #### &lt;typesetting&gt;
 
 |Property|Type|Description|
-|-|-|-|
+|--------|----|-----------|
 |&lt;spacing&gt;|integer|Specifies the amount of space to add between glyphs (after kerning is applied). Default value is zero.|
 |&lt;leading&gt;|integer|Specifies the amount of space between lines. Default value is the font resource's leading, if loaded; otherwise, 20.|
 |&lt;width&gt;|integer|Specifies the width by which to scale the glyphs. Default value is the font resource's base width, if loaded; otherwise, 20.|
@@ -347,7 +347,7 @@ any screen elements found at a deeper generation should be silently ignored.
 #### &lt;info&gt;
 
 |Property|Type|Description|
-|-|-|-|
+|--------|----|-----------|
 |&lt;width&gt;|integer|The width of the screen element.|
 |&lt;height&gt;|integer|The height of the screen element.|
 |&lt;tint&#8209;color&gt;|color|The color of the screen element.May be omitted; if so, defaults to transparent black.|
@@ -355,5 +355,5 @@ any screen elements found at a deeper generation should be silently ignored.
 #### &lt;search&#8209;paths&gt;
 
 |Property|Type|Description|
-|-|-|-|
+|--------|----|-----------|
 |&lt;path&gt;|string|Specifies a resource search path for this XLO, used to find fonts, textures, palettes, and other referenced files. The only implicit search path is the XLO's containing directory. The path may be absolute or relative to the containing XLO. Any number of &lt;path&gt; elements may be specified.|
