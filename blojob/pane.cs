@@ -129,6 +129,9 @@ namespace arookas {
 			if (!Enum.TryParse<bloAnchor>(element.Element("anchor"), true, out mAnchor)) {
 				mAnchor = bloAnchor.TopLeft;
 			}
+			if (!Enum.TryParse<gxCullMode>(element.Element("cull-mode"), true, out mCullMode)) {
+				mCullMode = gxCullMode.None;
+			}
 			mAlpha = (byte)bloMath.clamp((element.Element("alpha") | 255), 0, 255);
 			mInheritAlpha = (element.Element("alpha").Attribute("inherit") | true);
 		}
@@ -223,6 +226,10 @@ namespace arookas {
 
 			if (mAnchor != bloAnchor.TopLeft) {
 				writer.WriteElementString("anchor", mAnchor.ToString());
+			}
+
+			if (mCullMode != gxCullMode.None) {
+				writer.WriteElementString("cull-mode", mCullMode.ToString());
 			}
 
 			if (mAlpha != 255 || !mInheritAlpha) {
