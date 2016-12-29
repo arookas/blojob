@@ -1,5 +1,6 @@
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace arookas {
@@ -11,43 +12,123 @@ namespace arookas {
 		};
 
 		static void Main(string[] args) {
-			var cmd = new aCommandLine(args);
+			var cmd = new aCommandLine(args, '-');
 
 			Console.Title = String.Format("pablo v{0}", blojob.getVersion());
 			Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
 
-			if (cmd.Count == 0) {
-				Console.WriteLine("Usage: pablo.exe <input> [<format> [<search path> [...]]]");
-				return;
+			// do not use cmd for this check, as both d&d and -input will both return 1
+			switch (args.Length) {
+				case 0: doUsage(); break;
+				case 1: doDragAndDrop(cmd[0].Name); break;
+				default: doCommandLine(cmd); break;
 			}
-			
-			string input = Path.GetFullPath(cmd[0].Name);
-			string path = Path.GetDirectoryName(Path.GetFullPath(input));
-			string file = Path.GetFileName(input);
+		}
 
+		static void doUsage() {
+			Console.WriteLine("Usage: pablo.exe -input <file> [<format>] [options]");
+			Console.WriteLine();
+			Console.WriteLine("Options: ");
+			Console.WriteLine("  -search-paths [<path> [...]]");
+			Console.WriteLine("  -display-size <width> <height>");
+		}
+		static void doDragAndDrop(string input) {
 			if (!File.Exists(input)) {
-				Console.WriteLine("Couldn't not find input file '{0}'", input);
+				Console.WriteLine("Could not find input file '{0}'", input);
 				return;
 			}
 
-			var format = bloFormat.Blo1;
+			var path = Path.GetDirectoryName(Path.GetFullPath(input));
+			var file = Path.GetFileName(input);
 
-			if (cmd.Count > 1) {
-				var formatname = cmd[1].Name;
-				for (int i = 0; i < sFormatNames.Length; ++i) {
-					if (formatname.Equals(sFormatNames[i], StringComparison.InvariantCultureIgnoreCase)) {
-						format = (bloFormat)i;
+			createFinder(path, null);
+			var screen = loadScreen(input, bloFormat.Blo1);
+
+			if (screen == null) {
+				Console.WriteLine("Failed to load input file '{0}'", input);
+				return;
+			}
+
+			openViewer(screen, file);
+		}
+		static void doCommandLine(aCommandLine cmd) {
+			bool inputSet = false;
+			string input = null;
+			bloFormat format = bloFormat.Blo1;
+
+			var searchPaths = new List<string>(5);
+
+			bool sizeSet = false;
+			int width = 0, height = 0;
+
+			foreach (var param in cmd) {
+				switch (param.Name.ToLowerInvariant()) {
+					case "-input": {
+						if (param.Count < 1) {
+							break;
+						}
+						inputSet = true;
+						input = param[0];
+						format = (param.Count >= 2 ? parseFormat(param[1]) : bloFormat.Blo1);
+						break;
+					}
+					case "-search-paths": {
+						foreach (var arg in param) {
+							searchPaths.Add(arg);
+						}
+						break;
+					}
+					case "-display-size": {
+						if (param.Count != 2) {
+							break;
+						}
+						if (Int32.TryParse(param[0], out width) && Int32.TryParse(param[1], out height)) {
+							sizeSet = true;
+						}
 						break;
 					}
 				}
 			}
 
-			var finder = new bloResourceFinder(path);
-			for (var i = 2; i < cmd.Count; ++i) {
-				finder.addGlobalPath(cmd[i].Name);
+			if (!inputSet) {
+				doUsage();
+				return;
+			}
+
+			if (!File.Exists(input)) {
+				Console.WriteLine("Could not find input file '{0}'", input);
+				return;
+			}
+
+			var path = Path.GetDirectoryName(Path.GetFullPath(input));
+			var file = Path.GetFileName(input);
+
+			createFinder(path, searchPaths);
+			var screen = loadScreen(input, format);
+
+			if (screen == null) {
+				Console.WriteLine("Failed to load input file '{0}'", input);
+				return;
+			}
+
+			if (sizeSet) {
+				openViewer(screen, file, width, height);
+			} else {
+				openViewer(screen, file);
+			}
+		}
+
+		static bloResourceFinder createFinder(string localPath, IEnumerable<string> globalPaths) {
+			var finder = new bloResourceFinder(localPath);
+			if (globalPaths != null) {
+				foreach (var globalPath in globalPaths) {
+					finder.addGlobalPath(globalPath);
+				}
 			}
 			bloResourceFinder.setFinder(finder);
-
+			return finder;
+		}
+		static bloScreen loadScreen(string input, bloFormat format) {
 			bloScreen screen = null;
 			using (Stream stream = File.OpenRead(input)) {
 				switch (format) {
@@ -56,16 +137,31 @@ namespace arookas {
 					case bloFormat.Xml: screen = bloScreen.loadXml(stream); break;
 				}
 			}
+			return screen;
+		}
 
-			if (screen == null) {
-				Console.WriteLine("Failed to load input file '{0}'", input);
-				return;
+		static void openViewer(bloScreen screen, string title) {
+			var rectangle = screen.getRectangle();
+			openViewer(screen, title, rectangle.width, rectangle.height);
+		}
+		static void openViewer(bloScreen screen, string title, int width, int height) {
+			var viewer = new bloViewer(screen);
+			viewer.setTitle(title);
+			viewer.setSize(width, height);
+			viewer.run();
+		}
+
+		static bloFormat parseFormat(string text) {
+			var format = bloFormat.Blo1;
+
+			for (int i = 0; i < sFormatNames.Length; ++i) {
+				if (text.Equals(sFormatNames[i], StringComparison.InvariantCultureIgnoreCase)) {
+					format = (bloFormat)i;
+					break;
+				}
 			}
 
-			var viewer = new bloViewer(screen);
-			viewer.setTitle(Path.GetFileName(input));
-			viewer.setSize(600, 448);
-			viewer.run();
+			return format;
 		}
 
 	}
