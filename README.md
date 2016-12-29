@@ -19,7 +19,7 @@ The various formats supported by the library are as follows:
 |------|----|----|-----------|
 |compact|&#x2713;|&#x2713;|"Compact", or "BLO0", format used in Pikmin 1. Very limited and cannot set most properties.|
 |blo1|&#x2713;|&#x2713;|The standard "BLO1" format used by Wind Waker, Super Mario Sunshine, and Luigi's Mansion. Can set almost all properties.|
-|xml|&#x2713;|&#x2713;|A custom, XML-based text format, allowing for easier editing. See [here](xml-specs.md) for documentation on this format. Can set all properties.|
+|xml|&#x2713;|&#x2713;|A custom, XML-based text format, allowing for easier editing. See [here](xlo-specs.md) for documentation on this format. Can set all properties.|
 
 ### Compiling
 
