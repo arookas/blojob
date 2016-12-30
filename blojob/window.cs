@@ -20,7 +20,7 @@ namespace arookas {
 		protected int mMinHeight;
 		protected bool mTextured; // cached value, true if all textures are non-null
 
-		public bloWindow() {
+		internal bloWindow() {
 			mTextures = new TextureSlot[4];
 			for (int i = 0; i < 4; ++i) {
 				mTextures[i] = new TextureSlot();
@@ -172,7 +172,7 @@ namespace arookas {
 			}
 		}
 
-		public override void saveCompact(aBinaryWriter writer) {
+		internal override void saveCompact(aBinaryWriter writer) {
 			base.saveCompact(writer);
 
 			writer.Write16((ushort)mContentRect.left);
@@ -198,7 +198,7 @@ namespace arookas {
 
 			writer.WritePadding(4, 0);
 		}
-		public override void saveBlo1(aBinaryWriter writer) {
+		internal override void saveBlo1(aBinaryWriter writer) {
 			base.saveBlo1(writer);
 
 			byte numparams;
@@ -254,7 +254,7 @@ namespace arookas {
 
 			writer.WritePadding(4, 0);
 		}
-		public override void saveXml(XmlWriter writer) {
+		internal override void saveXml(XmlWriter writer) {
 			base.saveXml(writer);
 
 			writer.WriteStartElement("content");

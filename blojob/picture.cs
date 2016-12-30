@@ -21,7 +21,7 @@ namespace arookas {
 		protected Vector4d mKonstColor, mKonstAlpha;
 		protected bloColor[] mColors;
 
-		public bloPicture() {
+		internal bloPicture() {
 			mTextures = new List<TextureSlot>(cTextureSlots);
 			mColors = new bloColor[4];
 			mFromColor = new bloColor(bloColor.cZero);
@@ -153,7 +153,7 @@ namespace arookas {
 			setBlendKonstAlpha();
 		}
 
-		public override void saveCompact(aBinaryWriter writer) {
+		internal override void saveCompact(aBinaryWriter writer) {
 			base.saveCompact(writer);
 
 			if (mTextures.Count > 0) {
@@ -179,7 +179,7 @@ namespace arookas {
 				writer.Write32(mColors[i].rgba);
 			}
 		}
-		public override void saveBlo1(aBinaryWriter writer) {
+		internal override void saveBlo1(aBinaryWriter writer) {
 			base.saveBlo1(writer);
 
 			byte numparams;
@@ -248,7 +248,7 @@ namespace arookas {
 
 			writer.WritePadding(4, 0);
 		}
-		public override void saveXml(XmlWriter writer) {
+		internal override void saveXml(XmlWriter writer) {
 			base.saveXml(writer);
 
 			bloResource.save(mTextures[0].texture, "texture", writer);

@@ -16,7 +16,7 @@ namespace arookas {
 		protected bloTextboxHBinding mHBinding;
 		protected bloTextboxVBinding mVBinding;
 
-		public bloTextbox() {
+		internal bloTextbox() {
 			mFont = null;
 			mText = new ushort[1] { 0 };
 			mFromColor = new bloColor(bloColor.cZero);
@@ -150,7 +150,7 @@ namespace arookas {
 			bloXml.loadGradient(element.Element("gradient"), out mFromColor, out mToColor);
 		}
 
-		public override void saveCompact(aBinaryWriter writer) {
+		internal override void saveCompact(aBinaryWriter writer) {
 			base.saveCompact(writer);
 
 			bloResource.save(mFont, writer);
@@ -184,7 +184,7 @@ namespace arookas {
 
 			writer.WritePadding(4, 0);
 		}
-		public override void saveBlo1(aBinaryWriter writer) {
+		internal override void saveBlo1(aBinaryWriter writer) {
 			base.saveBlo1(writer);
 
 			byte numparams;
@@ -243,7 +243,7 @@ namespace arookas {
 
 			writer.WritePadding(4, 0);
 		}
-		public override void saveXml(XmlWriter writer) {
+		internal override void saveXml(XmlWriter writer) {
 			base.saveXml(writer);
 
 			bloResource.save(mFont, "font", writer);

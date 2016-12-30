@@ -28,11 +28,11 @@ namespace arookas {
 
 		protected byte mCumulativeAlpha;
 
-		public bloPane() {
+		internal bloPane() {
 			mChildren = new List<bloPane>(10);
 		}
 
-		public void load(bloPane parentPane, object source, bloFormat format) {
+		internal void load(bloPane parentPane, object source, bloFormat format) {
 			mParent = parentPane;
 			if (mParent != null) {
 				mParent.mChildren.Add(this);
@@ -136,7 +136,7 @@ namespace arookas {
 			mInheritAlpha = (element.Element("alpha").Attribute("inherit") | true);
 		}
 
-		public virtual void saveCompact(aBinaryWriter writer) {
+		internal virtual void saveCompact(aBinaryWriter writer) {
 			if (writer == null) {
 				throw new ArgumentNullException("writer");
 			}
@@ -149,7 +149,7 @@ namespace arookas {
 			writer.WriteS16((short)mRect.width);
 			writer.WriteS16((short)mRect.height);
 		}
-		public virtual void saveBlo1(aBinaryWriter writer) {
+		internal virtual void saveBlo1(aBinaryWriter writer) {
 			if (writer == null) {
 				throw new ArgumentNullException("writer");
 			}
@@ -201,7 +201,7 @@ namespace arookas {
 
 			writer.WritePadding(4, 0);
 		}
-		public virtual void saveXml(XmlWriter writer) {
+		internal virtual void saveXml(XmlWriter writer) {
 			if (writer == null) {
 				throw new ArgumentNullException("writer");
 			}
