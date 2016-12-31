@@ -78,7 +78,7 @@ namespace arookas {
 			int height = reader.ReadS16();
 			mRect.set(left, top, (left + width), (top + height));
 
-			setAnchor(bloAnchor.TopLeft);
+			setBasePosition(bloAnchor.TopLeft);
 			mAngle = 0.0d;
 			mAlpha = 255;
 			mInheritAlpha = true;
@@ -292,28 +292,28 @@ namespace arookas {
 			return (search(name) as TPane);
 		}
 
-		Vector2d getAnchorOffset() {
-			var anchor = new Vector2d();
+		Vector2d getBasePosition() {
+			var basePosition = new Vector2d();
 			switch ((int)mAnchor % 3) {
-				case 0: anchor.X = 0; break;
-				case 1: anchor.X = ((mRect.right - mRect.left) / 2); break;
-				case 2: anchor.X = (mRect.right - mRect.left); break;
+				case 0: basePosition.X = 0; break;
+				case 1: basePosition.X = ((mRect.width) / 2); break;
+				case 2: basePosition.X = (mRect.width); break;
 			}
 			switch ((int)mAnchor / 3) {
-				case 0: anchor.Y = 0; break;
-				case 1: anchor.Y = ((mRect.bottom - mRect.top) / 2); break;
-				case 2: anchor.Y = (mRect.bottom - mRect.top); break;
+				case 0: basePosition.Y = 0; break;
+				case 1: basePosition.Y = ((mRect.height) / 2); break;
+				case 2: basePosition.Y = (mRect.height); break;
 			}
-			return anchor;
+			return basePosition;
 		}
 
 		void setMatrix() {
 			GL.Translate(mRect.left, mRect.top, 0.0d);
 			if (mAngle != 0.0d) {
-				var anchor = getAnchorOffset();
-				GL.Translate(anchor.X, anchor.Y, 0.0d);
+				var basePosition = getBasePosition();
+				GL.Translate(basePosition.X, basePosition.Y, 0.0d);
 				GL.Rotate(-mAngle, Vector3d.UnitZ);
-				GL.Translate(-anchor.X, -anchor.Y, 0.0d);
+				GL.Translate(-basePosition.X, -basePosition.Y, 0.0d);
 			}
 		}
 		void setAlpha() {
@@ -437,7 +437,7 @@ namespace arookas {
 				child.setCullMode(cull);
 			}
 		}
-		public void setAnchor(bloAnchor anchor) {
+		public void setBasePosition(bloAnchor anchor) {
 			mAnchor = anchor;
 		}
 		public double setAngle(double angle) {
