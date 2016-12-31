@@ -288,7 +288,7 @@ namespace arookas {
 
 		int setString(byte[] buffer) {
 			if (mFont == null) {
-				mText = new ushort[1] { 0 };
+				mText = new ushort[0];
 				return 0;
 			}
 			return mFont.encode(buffer, out mText);
@@ -309,7 +309,7 @@ namespace arookas {
 		public ushort[] setString(ushort[] buffer) {
 			ushort[] old = mText;
 			if (buffer == null) {
-				buffer = new ushort[1] { 0 };
+				buffer = new ushort[0];
 			}
 			mText = buffer;
 			return old;
