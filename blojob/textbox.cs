@@ -24,6 +24,14 @@ namespace arookas {
 			mTopColor = new bloColor(bloColor.cWhite);
 			mBottomColor = new bloColor(bloColor.cWhite);
 		}
+		public bloTextbox(uint name, bloRectangle rectangle, bloFont font, string text, bloTextboxHBinding hbind, bloTextboxVBinding vbind) {
+			mName = name;
+			mRect = rectangle;
+			mFont = font;
+			mHBinding = hbind;
+			mVBinding = vbind;
+			setString(text);
+		}
 
 		protected override void loadCompact(aBinaryReader reader) {
 			base.loadCompact(reader);

@@ -30,6 +30,22 @@ namespace arookas {
 
 		internal bloPane() {
 			mChildren = new List<bloPane>(10);
+			mVisible = true;
+			mAlpha = 255;
+			mInheritAlpha = true;
+		}
+		public bloPane(uint name, bloRectangle rectangle) {
+			mName = name;
+			mRect = rectangle;
+		}
+		public bloPane(bloPane parentPane, uint name, bool visible, bloRectangle rectangle) {
+			mParent = parentPane;
+			if (mParent != null) {
+				mParent.mChildren.Add(this);
+			}
+			mName = name;
+			mVisible = visible;
+			mRect = rectangle;
 		}
 
 		internal void load(bloPane parentPane, object source, bloFormat format) {

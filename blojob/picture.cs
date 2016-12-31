@@ -26,6 +26,23 @@ namespace arookas {
 			mColors = new bloColor[4];
 			mFromColor = new bloColor(bloColor.cZero);
 			mToColor = new bloColor(bloColor.cOne);
+			mBinding = (bloBinding.Left | bloBinding.Top | bloBinding.Right | bloBinding.Bottom);
+		}
+		public bloPicture(bloTexture texture) {
+			if (texture == null) {
+				throw new ArgumentNullException("texture");
+			}
+			mTextures.Add(new TextureSlot(texture));
+			mRect.set(0, 0, texture.getWidth(), texture.getHeight());
+		}
+		public bloPicture(uint name, bloRectangle rectangle, bloTexture texture, bloPalette palette) {
+			if (texture == null) {
+				throw new ArgumentNullException("texture");
+			}
+			mName = name;
+			mRect = rectangle;
+			mTextures.Add(new TextureSlot(texture));
+			texture.attachPalette(palette);
 		}
 
 		protected override void loadCompact(aBinaryReader reader) {

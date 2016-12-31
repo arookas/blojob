@@ -16,14 +16,66 @@ namespace arookas {
 		protected TextureSlot[] mTextures;
 		protected bloTexture mContentTexture;
 		protected bloColor mFromColor, mToColor;
-		protected int mMinWidth;
-		protected int mMinHeight;
-		protected bool mTextured; // cached value, true if all textures are non-null
+		protected int mMinWidth, mMinHeight;
+		protected bool mHasFrame; // cached value, true if all textures are non-null
 
 		internal bloWindow() {
 			mTextures = new TextureSlot[4];
 			for (int i = 0; i < 4; ++i) {
 				mTextures[i] = new TextureSlot();
+			}
+		}
+		public bloWindow(bloTexture texture, bloTextureBase tbase) {
+			initialize(texture, texture, texture, texture, bloEnum.convertMirror(tbase), new bloRectangle());
+		}
+		public bloWindow(bloTexture topLeft, bloTexture topRight, bloTexture bottomLeft, bloTexture bottomRight) {
+			initialize(topLeft, topRight, bottomLeft, bottomRight, 0, new bloRectangle());
+		}
+		public bloWindow(uint name, bloRectangle rectangle, bloTexture texture, bloTextureBase tbase, bloPalette palette) {
+			mName = name;
+			mPalette = palette;
+			initialize(texture, texture, texture, texture, bloEnum.convertMirror(tbase), rectangle);
+		}
+		public bloWindow(uint name, bloRectangle rectangle, bloTexture topLeft, bloTexture topRight, bloTexture bottomLeft, bloTexture bottomRight, bloPalette palette) {
+			mName = name;
+			mPalette = palette;
+			initialize(topLeft, topRight, bottomLeft, bottomRight, 0, rectangle);
+		}
+
+		void initialize(bloTexture topLeft, bloTexture topRight, bloTexture bottomLeft, bloTexture bottomRight, bloWindowMirror mirror, bloRectangle rectangle) {
+			mTextures[(int)bloTextureBase.TopLeft].texture = topLeft;
+			mTextures[(int)bloTextureBase.TopRight].texture = topRight;
+			mTextures[(int)bloTextureBase.BottomLeft].texture = bottomLeft;
+			mTextures[(int)bloTextureBase.BottomRight].texture = bottomRight;
+			for (var i = 0; i < 4; ++i) {
+				mTextures[i].mirror = (bloMirror)(((int)mirror >> (6 - (i * 2))) & 3);
+			}
+			mRect = rectangle;
+			mContentRect = new bloRectangle(0, 0, mRect.width, mRect.height);
+			mFromColor = new bloColor(bloColor.cZero);
+			mToColor = new bloColor(bloColor.cOne);
+			initializeColor();
+			initializeMinSize();
+		}
+		void initializeColor() {
+			for (var i = 0; i < 4; ++i) {
+				mTextures[i].color = new bloColor(bloColor.cWhite);
+			}
+		}
+		void initializeMinSize() {
+			mHasFrame = true;
+			for (int i = 0; i < 4; ++i) {
+				if (mTextures[i].texture == null) {
+					mHasFrame = false;
+					break;
+				}
+			}
+			if (mHasFrame) {
+				mMinWidth = (mTextures[(int)bloTextureBase.TopLeft].texture.getWidth() + mTextures[(int)bloTextureBase.TopRight].texture.getWidth());
+				mMinHeight = (mTextures[(int)bloTextureBase.TopLeft].texture.getHeight() + mTextures[(int)bloTextureBase.BottomLeft].texture.getHeight());
+			} else {
+				mMinWidth = 1;
+				mMinHeight = 1;
 			}
 		}
 
@@ -71,7 +123,7 @@ namespace arookas {
 			}
 
 			for (int i = 0; i < 4; ++i) {
-				mTextures[i].color.rgba = reader.Read32();
+				mTextures[i].color = new bloColor(reader.Read32());
 			}
 
 			mContentTexture = null;
@@ -79,7 +131,7 @@ namespace arookas {
 			mToColor.rgba = bloColor.cOne;
 
 			reader.Skip(4);
-			postLoad();
+			initializeMinSize();
 		}
 		protected override void loadBlo1(aBinaryReader reader) {
 			base.loadBlo1(reader);
@@ -105,7 +157,7 @@ namespace arookas {
 			}
 
 			for (int i = 0; i < 4; ++i) {
-				mTextures[i].color.rgba = reader.Read32();
+				mTextures[i].color = new bloColor(reader.Read32());
 			}
 
 			numparams -= 14;
@@ -132,7 +184,7 @@ namespace arookas {
 			}
 
 			reader.Skip(4);
-			postLoad();
+			initializeMinSize();
 		}
 		protected override void loadXml(xElement element) {
 			base.loadXml(element);
@@ -153,25 +205,9 @@ namespace arookas {
 
 			bloXml.loadGradient(element.Element("gradient"), out mFromColor, out mToColor);
 
-			postLoad();
+			initializeMinSize();
 		}
-		void postLoad() {
-			mTextured = true;
-			for (int i = 0; i < 4; ++i) {
-				if (mTextures[i].texture == null) {
-					mTextured = false;
-					break;
-				}
-			}
-			if (mTextured) {
-				mMinWidth = (mTextures[cTopLeft].texture.getWidth() + mTextures[cTopRight].texture.getWidth());
-				mMinHeight = (mTextures[cTopLeft].texture.getHeight() + mTextures[cBottomLeft].texture.getHeight());
-			} else {
-				mMinWidth = 1;
-				mMinHeight = 1;
-			}
-		}
-
+		
 		internal override void saveCompact(aBinaryWriter writer) {
 			base.saveCompact(writer);
 
@@ -291,7 +327,7 @@ namespace arookas {
 				return;
 			}
 			drawContents();
-			if (mTextured) {
+			if (mHasFrame) {
 				TextureSlot slot;
 
 				// fill rectangle (not necessarily content rectangle)
