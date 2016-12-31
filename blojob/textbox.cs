@@ -286,6 +286,14 @@ namespace arookas {
 			printer.printReturn(mText, rect.width, rect.height, mHBinding, mVBinding, 0, 0, mCumulativeAlpha);
 		}
 
+		int setString(string text) {
+			if (mFont == null) {
+				mText = new ushort[0];
+				return 0;
+			}
+			mText = mFont.encode(text);
+			return mText.Length;
+		}
 		int setString(byte[] buffer) {
 			if (mFont == null) {
 				mText = new ushort[0];
