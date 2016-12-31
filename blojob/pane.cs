@@ -307,8 +307,8 @@ namespace arookas {
 			return basePosition;
 		}
 
-		void setMatrix() {
-			GL.Translate(mRect.left, mRect.top, 0.0d);
+		void setMatrix(int x, int y) {
+			GL.Translate((mRect.left + x), (mRect.top + y), 0.0d);
 			if (mAngle != 0.0d) {
 				var basePosition = getBasePosition();
 				GL.Translate(basePosition.X, basePosition.Y, 0.0d);
@@ -334,6 +334,12 @@ namespace arookas {
 		}
 
 		public void draw() {
+			draw(0, 0);
+		}
+		public void draw(bloPoint point) {
+			draw(point.x, point.y);
+		}
+		public void draw(int x, int y) {
 			var context = bloContext.getContext();
 
 			if ((!mVisible && !context.hasRenderFlags(bloRenderFlags.ShowInvisible)) || mRect.isEmpty()) {
@@ -341,13 +347,13 @@ namespace arookas {
 			}
 
 			GL.PushMatrix();
-			setMatrix();
+			setMatrix(x, y);
 			setAlpha();
 			gl.setCullMode(mCullMode);
 			drawSelf();
 
 			foreach (var child in mChildren) {
-				child.draw();
+				child.draw(0, 0);
 			}
 
 			GL.PopMatrix();
