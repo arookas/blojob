@@ -7,7 +7,71 @@ The API is not thread-safe; it is the user's responsibility to block racing cond
 
 ### Creating elements at runtime
 
-If you do not want to load a BLO from a stream, but rather create them at runtime, the constructors of the various element classes allow you to generate BLO elements dynamically at runtime with a full hierarchy.
+If you do not want to load a BLO from a stream, but rather create them at runtime, the constructors of the various element classes allow you to do just this.
+
+#### Pane
+
+The `bloPane` class exposes the following constructors:
+
+```cs
+public bloPane(uint name, bloRectangle rectangle);
+public bloPane(bloPane parentPane, uint name, bool visible, bloRectangle rectangle);
+```
+
+The element will be initialized with the quad specified by `rectangle`.
+The `name` parameter allows the element to be referenced later via the `search` method.
+`visible` sets the element's initial visibility.
+`parentPane` allows the element to be a child of the specified element.
+If not `null`, this makes the element's rectangle and alpha relative to the parent.
+
+#### Picture
+
+The `bloPicture` class exposes the following constructors:
+
+```cs
+public bloPicture(bloTexture texture);
+public bloPicture(uint name, bloRectangle rectangle, bloTexture texture, bloPalette palette);
+```
+
+In any case, `texture` assigns a graphic to the element and must not be `null`.
+In the first overload, the element's rectangle will be initialized to the size of the given texture; otherwise, `rectangle` is used.
+The `name` parameter allows the element to be referenced later via the `search` method.
+`palette` allows to override the palette in `texture`; otherwise, the texture's embedded palette is used.
+
+#### Window
+
+The `bloWindow` class exposes the following constructors:
+
+```cs
+public bloWindow(bloTexture texture, bloTextureBase tbase);
+public bloWindow(bloTexture topLeft, bloTexture topRight, bloTexture bottomLeft, bloTexture bottomRight);
+public bloWindow(uint name, bloRectangle rectangle, bloTexture texture, bloTextureBase tbase, bloPalette palette);
+public bloWindow(uint name, bloRectangle rectangle, bloTexture topLeft, bloTexture topRight, bloTexture bottomLeft, bloTexture bottomRight, bloPalette palette);
+```
+
+By default, a window element is initialized with an empty rectangle;
+you may override this by using an overload with the `rectangle` parameter.
+The `name` parameter allows the element to be referenced later via the `search` method.
+A window has a texture for each corner, specified by the `topLeft`, `topRight`, `bottomLeft`, and `bottomRight` parameters.
+You may also use a single texture for each corner;
+in this case, `tbase` specifies which corner `texture` represents.
+The texture will be mirrored appropriately to fit the remaining corners.
+
+#### Textbox
+
+The `bloTextbox` class exposes the following constructors:
+
+```cs
+public bloTextbox(uint name, bloRectangle rectangle, bloFont font, string text, bloTextboxHBinding hbind, bloTextboxVBinding vbind);
+```
+
+The `rectangle` parameter specifies the textbox's rendering area.
+Text will wrap and align based on this rectangle.
+`font` specifies the font to use for text rendering and encoding.
+Lines of text rendered by the element will be aligned on both axes according to `hbind` and `vbind`.
+
+> **Note:** if `font` is `null`, an empty text buffer will be assigned to the textbox and no text will be rendered with `draw`.
+> If a valid font is assigned later, you must also assign a new text buffer using the `bloFont.encode` method.
 
 ### Loading from and saving to streams
 
