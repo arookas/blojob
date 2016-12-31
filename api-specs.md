@@ -183,6 +183,8 @@ public bool remove(int slot);
 The `insert` method inserts `texture` at the specified slot.
 `slot` must be in the range of [0, current slot count].
 `factor` represents the blending factor for this new texture, in the range of zero to one.
+The return value indicates if the texture was successfully inserted into the specified slot.
+This can be `false` if any of the parameters are invalid or if all texture slots are taken.
 
 The `changeTexture` method allows you to simply change a texture on an already existing slot.
 `slot` must be in the range of [0, current slot count).
@@ -242,7 +244,7 @@ The `update` method should be called every update frame in your program's loop, 
 #### BoundPane
 
 The `bloBoundPane` class interpolates BLO elements in a three&#8209;point, non&#8209;linear curve.
-You can position and resize an element, but not fade, with this class.
+You can position and resize an element, but not fade alpha, with this class.
 
 Similar to `bloExPane`, you must first attach an element to it before using it by calling one of the constructor overloads:
 
@@ -262,7 +264,7 @@ public void setPaneSize(int steps, bloPoint top, bloPoint mid, bloPoint bot);
 ```
 
 The `steps` parameter represents how many updates it will take to finish the interpolation.
-Only one interpolation of each property (offset, size, alpha) may be set at a time, but any number of the properties may be interpolated simultaneously.
+Only one interpolation of each property (position, size) may be set at a time, but any number of the properties may be interpolated simultaneously.
 
 The `top,` `mid`, and `bot` parameters specify the 2D points in the curve.
 
@@ -270,7 +272,7 @@ The `update` method should be called every update frame in your program's loop, 
 
 #### BlendPane
 
-The `bloBlendPane` class inherits from `bloBoundPaen`; as such, it interpolates BLO elements in a three-point, non-linear curve.
+The `bloBlendPane` class inherits from `bloBoundPaen`; as such, it also interpolates BLO elements in a three-point, non-linear curve.
 On top of positioning and resizing an element, you can also blend between two textures over time with this class.
 
 Similar to `bloExPane`, you must first attach an element to it before using it by calling one of the constructor overloads:
@@ -294,14 +296,14 @@ public void setPaneSize(int steps, bloPoint top, bloPoint mid, bloPoint bot);
 ```
 
 The `steps` parameter represents how many updates it will take to finish the interpolation.
-Only one interpolation of each property (offset, size, alpha) may be set at a time, but any number of the properties may be interpolated simultaneously.
+Only one interpolation of each property (position, size, blend) may be set at a time, but any number of the properties may be interpolated simultaneously.
 
 The `setPaneBlend` method blends a `bloPicture` between the textures `from` and `to` over `steps` updates.
 `from` may be null; in which case, the blend occurs instantly and no interpolation occurs.
-Note that this particular method is only enabled if the assigned element is derived from `bloPicture`.
+Note that this particular method is enabled only if the assigned element is derived from `bloPicture`.
 The other methods work on all element types.
 
-> **Note:** The attached `bloPicture` should already have a second texture slot inserted via the `insert` merthod.
+> **Note:** The attached `bloPicture` should already have a second texture slot inserted via its `insert` merthod.
 This class does not implicitly add a second texture to the attached element.
 
 The `update` method should be called every update frame in your program's loop, and returns `true` if all properties have finished interpolating.
