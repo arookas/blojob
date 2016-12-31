@@ -5,6 +5,19 @@ It is inspired by the API seen in Nintendo's "JSystem" library, as well as class
 For rendering, it requires an active OpenGL contex to be initialized and made current on the same thread from which the _blojob_ API calls are made.
 The API is not thread-safe; it is the user's responsibility to block racing conditions.
 
+#### Name Conversion
+
+BLO elements are referenced by names, which are internally an unsigned, 32-bit integer.
+You may generate a name from a string and vice versa using the static conversion methods on the `bloPane` class:
+
+```cs
+public static uint convertStringToName(string str);
+public static string convertNameToString(uint name);
+```
+
+The string should be no more than 4 characters; if longer, only the last 4 will be used.
+Each character should be within the 0&#8209;255 range.
+
 ### Creating elements at runtime
 
 If you do not want to load a BLO from a stream, but rather create them at runtime, the constructors of the various element classes allow you to do just this.
@@ -152,19 +165,6 @@ It should be done after multitexturing but before the vertex color is applied.
 
 There are several classes to manipulate BLO elements at runtime.
 You may also use the public methods on the various element classes themselves to change their state.
-
-#### Name Conversion
-
-BLO elements are referenced by names, which are internally an unsigned, 32-bit integer.
-You may generate a name from a string and vice versa using the static conversion methods on the `bloPane` class:
-
-```cs
-public static uint convertStringToName(string str);
-public static string convertNameToString(uint name);
-```
-
-The string should be no more than 4 characters; if longer, only the last 4 will be used.
-Each character should be within the 0&#8209;255 range.
 
 #### Multitexturing
 
