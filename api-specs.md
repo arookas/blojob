@@ -267,6 +267,7 @@ The `steps` parameter represents how many updates it will take to finish the int
 Only one interpolation of each property (position, size) may be set at a time, but any number of the properties may be interpolated simultaneously.
 
 The `top,` `mid`, and `bot` parameters specify the 2D points in the curve.
+The interpolation begins at `top` and ends at `bot`, meeting `mid` at the midpoint with an exponential curve.
 
 The `update` method should be called every update frame in your program's loop, and returns `true` if all properties have finished interpolating.
 
