@@ -23,12 +23,32 @@ namespace arookas {
 		BottomRight,
 	}
 
+	public enum bloTextureBase {
+		TopLeft,
+		TopRight,
+		BottomLeft,
+		BottomRight,
+	}
+
 	[Flags]
 	public enum bloBinding {
 		Bottom = (1 << 0),
 		Top = (1 << 1),
 		Right = (1 << 2),
 		Left = (1 << 3),
+	}
+
+	[Flags]
+	public enum bloWindowMirror {
+		None = 0,
+		BottomRightY = (1 << 0),
+		BottomRightX = (1 << 1),
+		BottomLeftY = (1 << 2),
+		BottomLeftX = (1 << 3),
+		TopRightY = (1 << 4),
+		TopRightX = (1 << 5),
+		TopLeftY = (1 << 6),
+		TopLeftX = (1 << 7),
 	}
 
 	public enum bloTextboxHBinding {
@@ -128,6 +148,15 @@ namespace arookas {
 		}
 		public static bool hasFlag(this bloRenderFlags value, bloRenderFlags flag) {
 			return ((value & flag) == flag);
+		}
+
+		public static bloWindowMirror convertMirror(bloTextureBase tbase) {
+			return (bloWindowMirror)(
+				(3 - (int)tbase) |
+				(((2 + (int)tbase) % 4) << 2) |
+				(((1 - (int)tbase) % 4) << 4) |
+				((int)tbase << 6)
+			);
 		}
 
 	}
