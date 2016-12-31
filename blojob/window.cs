@@ -419,6 +419,13 @@ namespace arookas {
 
 		}
 
+		public void setContentsColor(bloColor topLeft, bloColor topRight, bloColor bottomLeft, bloColor bottomRight) {
+			mTextures[cTopLeft].color = topLeft;
+			mTextures[cTopRight].color = topRight;
+			mTextures[cBottomLeft].color = bottomLeft;
+			mTextures[cBottomRight].color = bottomRight;
+		}
+
 		static void loadCornerXml(TextureSlot slot, bloResourceFinder finder, xElement element, bloMirror defMirror) {
 			slot.texture = finder.find<bloTexture>(element.Element("texture"), "timg");
 			slot.color = bloXml.loadColor(element.Element("color"), new bloColor(bloColor.cWhite));
