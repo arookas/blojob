@@ -454,6 +454,10 @@ namespace arookas {
 			public bloColor color;
 			public bloTexture texture;
 
+			public TextureSlot() {
+				color = new bloColor(bloColor.cWhite);
+			}
+
 			public int getWidth() {
 				return texture.getWidth();
 			}
