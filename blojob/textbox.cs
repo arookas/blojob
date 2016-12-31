@@ -18,7 +18,7 @@ namespace arookas {
 
 		internal bloTextbox() {
 			mFont = null;
-			mText = new ushort[1] { 0 };
+			mText = new ushort[0];
 			mFromColor = new bloColor(bloColor.cZero);
 			mToColor = new bloColor(bloColor.cOne);
 			mTopColor = new bloColor(bloColor.cWhite);
