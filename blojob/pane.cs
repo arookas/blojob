@@ -433,6 +433,9 @@ namespace arookas {
 		}
 		public void setCullMode(gxCullMode cull) {
 			mCullMode = cull;
+			foreach (var child in mChildren) {
+				child.setCullMode(cull);
+			}
 		}
 		public void setAnchor(bloAnchor anchor) {
 			mAnchor = anchor;
