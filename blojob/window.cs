@@ -265,26 +265,10 @@ namespace arookas {
 			bloResource.save(mPalette, "palette", writer);
 
 			writer.WriteStartElement("corners");
-			writer.WriteStartElement("top-left");
-			bloResource.save(mTextures[cTopLeft].texture, "texture", writer);
-			writer.WriteElementString("mirror", mTextures[cTopLeft].mirror.ToString());
-			bloXml.saveColor(writer, mTextures[cTopLeft].color, "color");
-			writer.WriteEndElement();
-			writer.WriteStartElement("top-right");
-			bloResource.save(mTextures[cTopRight].texture, "texture", writer);
-			writer.WriteElementString("mirror", mTextures[cTopRight].mirror.ToString());
-			bloXml.saveColor(writer, mTextures[cTopRight].color, "color");
-			writer.WriteEndElement();
-			writer.WriteStartElement("bottom-left");
-			bloResource.save(mTextures[cBottomLeft].texture, "texture", writer);
-			writer.WriteElementString("mirror", mTextures[cBottomLeft].mirror.ToString());
-			bloXml.saveColor(writer, mTextures[cBottomLeft].color, "color");
-			writer.WriteEndElement();
-			writer.WriteStartElement("bottom-right");
-			bloResource.save(mTextures[cBottomRight].texture, "texture", writer);
-			writer.WriteElementString("mirror", mTextures[cBottomRight].mirror.ToString());
-			bloXml.saveColor(writer, mTextures[cBottomRight].color, "color");
-			writer.WriteEndElement();
+			saveCornerXml(mTextures[(int)bloTextureBase.TopLeft], writer, "top-left");
+			saveCornerXml(mTextures[(int)bloTextureBase.TopRight], writer, "top-right");
+			saveCornerXml(mTextures[(int)bloTextureBase.BottomLeft], writer, "bottom-left");
+			saveCornerXml(mTextures[(int)bloTextureBase.BottomRight], writer, "bottom-right");
 			writer.WriteEndElement();
 
 			bloXml.saveGradient(writer, mFromColor, mToColor, "gradient");
@@ -441,6 +425,13 @@ namespace arookas {
 			if (!Enum.TryParse<bloMirror>(element.Element("mirror"), out slot.mirror)) {
 				slot.mirror = 0;
 			}
+		}
+		static void saveCornerXml(TextureSlot slot, XmlWriter writer, string name) {
+			writer.WriteStartElement(name);
+			bloResource.save(slot.texture, "texture", writer);
+			writer.WriteElementString("mirror", slot.mirror.ToString());
+			bloXml.saveColor(writer, slot.color, "color");
+			writer.WriteEndElement();
 		}
 
 		protected const int cTopLeft = 0;
