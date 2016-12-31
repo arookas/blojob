@@ -175,10 +175,15 @@ A total of four texture "slots", or "channels", may be assigned to a single `blo
 The following methods allow inserting, changing, and removing texture slots:
 
 ```cs
+public int getTextureCount();
+
 public bool insert(bloTexture texture, int slot, double factor);
 public bloTexture changeTexture(bloTexture texture, int slot);
 public bool remove(int slot);
 ```
+
+The `getTextureCount` method returns the number of texture slots assigned to the element.
+Use this value as a slot index in the `insert` method to append the texture at the end.
 
 The `insert` method inserts `texture` at the specified slot.
 `slot` must be in the range of [0, current slot count].

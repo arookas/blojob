@@ -506,6 +506,10 @@ namespace arookas {
 
 		}
 
+		public int getTextureCount() {
+			return mTextures.Count;
+		}
+
 		public bool insert(bloTexture texture, int slot, double factor) {
 			if (texture == null) {
 				return false;
