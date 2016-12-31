@@ -343,7 +343,7 @@ namespace arookas {
 			GL.PushMatrix();
 			setMatrix();
 			setAlpha();
-			gl.setCullMode(gxCullMode.None);
+			gl.setCullMode(mCullMode);
 			drawSelf();
 
 			foreach (var child in mChildren) {
