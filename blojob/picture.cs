@@ -587,6 +587,13 @@ namespace arookas {
 
 		}
 
+		public bloColor getFromColor() {
+			return mFromColor;
+		}
+		public bloColor getToColor() {
+			return mToColor;
+		}
+
 		public int getTextureCount() {
 			return mTextureCount;
 		}
