@@ -597,6 +597,18 @@ namespace arookas {
 			}
 			mBlendAlphaFactors[slot] = factor;
 		}
+		public void setBlendColorFactor(double a, double b, double c, double d) {
+			mBlendColorFactors[0] = a;
+			mBlendColorFactors[1] = b;
+			mBlendColorFactors[2] = c;
+			mBlendColorFactors[3] = d;
+		}
+		public void setBlendAlphaFactor(double a, double b, double c, double d) {
+			mBlendAlphaFactors[0] = a;
+			mBlendAlphaFactors[1] = b;
+			mBlendAlphaFactors[2] = c;
+			mBlendAlphaFactors[3] = d;
+		}
 
 		public void setBlendKonstColor() {
 			var konst = new double[4];
