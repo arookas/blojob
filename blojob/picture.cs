@@ -331,6 +331,71 @@ namespace arookas {
 			}
 		}
 
+		public void draw(bloRectangle rectangle, bloMirror mirror, bool rotate90) {
+			draw(rectangle.left, rectangle.top, rectangle.width, rectangle.height, mirror.hasFlag(bloMirror.X), mirror.hasFlag(bloMirror.Y), rotate90);
+		}
+		public void draw(int x, int y, int width, int height, bool mirrorX, bool mirrorY, bool rotate90) {
+
+			var context = bloContext.getContext();
+
+			context.useProgram();
+			context.setProgramInt("textureCount", mTextureCount);
+			for (var i = 0; i < mTextureCount; ++i) {
+				context.setProgramInt(String.Format("texture[{0}]", i), i);
+				context.setProgramInt(String.Format("transparency[{0}]", i), mTextures[i].getTransparency());
+			}
+			context.setProgramVector("blendColorFactor", mKonstColor);
+			context.setProgramVector("blendAlphaFactor", mKonstAlpha);
+			context.setProgramColor("fromColor", mFromColor);
+			context.setProgramColor("toColor", mToColor);
+
+			var topLeftColor = bloMath.scaleAlpha(mColors[(int)bloTextureBase.TopLeft], mAlpha);
+			var topRightColor = bloMath.scaleAlpha(mColors[(int)bloTextureBase.TopRight], mAlpha);
+			var bottomLeftColor = bloMath.scaleAlpha(mColors[(int)bloTextureBase.BottomLeft], mAlpha);
+			var bottomRightColor = bloMath.scaleAlpha(mColors[(int)bloTextureBase.BottomRight], mAlpha);
+
+			for (var i = 0; i < mTextureCount; ++i) {
+				mTextures[i].bind(i);
+			}
+
+			GL.PushMatrix();
+			GL.Translate(x, y, 0.0d);
+			GL.Begin(PrimitiveType.Quads);
+			if (!rotate90) {
+				GL.TexCoord2((mirrorX ? 1.0d : 0.0d), (mirrorY ? 1.0d : 0.0d));
+			} else {
+				GL.TexCoord2((mirrorX ? 1.0d : 0.0d), (mirrorY ? 0.0d : 1.0d));
+			}
+			GL.Color4(topLeftColor);
+			GL.Vertex3(0.0d, 0.0d, 0.0d);
+			if (!rotate90) {
+				GL.TexCoord2((mirrorX ? 0.0d : 1.0d), (mirrorY ? 1.0d : 0.0d));
+			} else {
+				GL.TexCoord2((mirrorX ? 1.0d : 0.0d), (mirrorY ? 1.0d : 0.0d));
+			}
+			GL.Color4(topRightColor);
+			GL.Vertex3(width, 0.0d, 0.0d);
+			if (!rotate90) {
+				GL.TexCoord2((mirrorX ? 0.0d : 1.0d), (mirrorY ? 0.0d : 1.0d));
+			} else {
+				GL.TexCoord2((mirrorX ? 0.0d : 1.0d), (mirrorY ? 1.0d : 0.0d));
+			}
+			GL.Color4(bottomRightColor);
+			GL.Vertex3(width, height, 0.0d);
+			if (!rotate90) {
+				GL.TexCoord2((mirrorX ? 1.0d : 0.0d), (mirrorY ? 0.0d : 1.0d));
+			} else {
+				GL.TexCoord2((mirrorX ? 0.0d : 1.0d), (mirrorY ? 0.0d : 1.0d));
+			}
+			GL.Color4(bottomLeftColor);
+			GL.Vertex3(0.0d, height, 0.0d);
+			GL.End();
+			GL.PopMatrix();
+
+			context.unuseProgram();
+
+		}
+
 		protected override void drawSelf() {
 			var context = bloContext.getContext();
 
