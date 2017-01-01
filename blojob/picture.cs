@@ -171,10 +171,10 @@ namespace arookas {
 			var white = new bloColor(bloColor.cWhite);
 			var colors = element.Element("colors");
 
-			mColors[cTopLeft] = bloXml.loadColor(colors.Element("top-left"), white);
-			mColors[cTopRight] = bloXml.loadColor(colors.Element("top-right"), white);
-			mColors[cBottomLeft] = bloXml.loadColor(colors.Element("bottom-left"), white);
-			mColors[cBottomRight] = bloXml.loadColor(colors.Element("bottom-right"), white);
+			mColors[(int)bloTextureBase.TopLeft] = bloXml.loadColor(colors.Element("top-left"), white);
+			mColors[(int)bloTextureBase.TopRight] = bloXml.loadColor(colors.Element("top-right"), white);
+			mColors[(int)bloTextureBase.BottomLeft] = bloXml.loadColor(colors.Element("bottom-left"), white);
+			mColors[(int)bloTextureBase.BottomRight] = bloXml.loadColor(colors.Element("bottom-right"), white);
 
 			setBlendKonstColor();
 			setBlendKonstAlpha();
@@ -211,13 +211,13 @@ namespace arookas {
 
 			byte numparams;
 
-			if (mColors[cBottomRight].rgba != bloColor.cWhite) {
+			if (mColors[(int)bloTextureBase.BottomRight].rgba != bloColor.cWhite) {
 				numparams = 11;
-			} else if (mColors[cBottomLeft].rgba != bloColor.cWhite) {
+			} else if (mColors[(int)bloTextureBase.BottomLeft].rgba != bloColor.cWhite) {
 				numparams = 10;
-			} else if (mColors[cTopRight].rgba != bloColor.cWhite) {
+			} else if (mColors[(int)bloTextureBase.TopRight].rgba != bloColor.cWhite) {
 				numparams = 9;
-			} else if (mColors[cTopLeft].rgba != bloColor.cWhite) {
+			} else if (mColors[(int)bloTextureBase.TopLeft].rgba != bloColor.cWhite) {
 				numparams = 8;
 			} else if (mToColor.rgba != bloColor.cOne) {
 				numparams = 7;
@@ -316,10 +316,10 @@ namespace arookas {
 
 			if (saveColors) {
 				writer.WriteStartElement("colors");
-				bloXml.saveColor(writer, mColors[cTopLeft], "top-left");
-				bloXml.saveColor(writer, mColors[cTopRight], "top-right");
-				bloXml.saveColor(writer, mColors[cBottomLeft], "bottom-left");
-				bloXml.saveColor(writer, mColors[cBottomRight], "bottom-right");
+				bloXml.saveColor(writer, mColors[(int)bloTextureBase.TopLeft], "top-left");
+				bloXml.saveColor(writer, mColors[(int)bloTextureBase.TopRight], "top-right");
+				bloXml.saveColor(writer, mColors[(int)bloTextureBase.BottomLeft], "bottom-left");
+				bloXml.saveColor(writer, mColors[(int)bloTextureBase.BottomRight], "bottom-right");
 				writer.WriteEndElement();
 			}
 		}
@@ -559,10 +559,10 @@ namespace arookas {
 
 			bloRectangle rect = new bloRectangle(x, y, (x + width), (y + height));
 
-			var topLeftColor = bloMath.scaleAlpha(mColors[cTopLeft], mCumulativeAlpha);
-			var topRightColor = bloMath.scaleAlpha(mColors[cTopRight], mCumulativeAlpha);
-			var bottomLeftColor = bloMath.scaleAlpha(mColors[cBottomLeft], mCumulativeAlpha);
-			var bottomRightColor = bloMath.scaleAlpha(mColors[cBottomRight], mCumulativeAlpha);
+			var topLeftColor = bloMath.scaleAlpha(mColors[(int)bloTextureBase.TopLeft], mCumulativeAlpha);
+			var topRightColor = bloMath.scaleAlpha(mColors[(int)bloTextureBase.TopRight], mCumulativeAlpha);
+			var bottomLeftColor = bloMath.scaleAlpha(mColors[(int)bloTextureBase.BottomLeft], mCumulativeAlpha);
+			var bottomRightColor = bloMath.scaleAlpha(mColors[(int)bloTextureBase.BottomRight], mCumulativeAlpha);
 
 			for (var i = 0; i < mTextureCount; ++i) {
 				mTextures[i].bind(i);
@@ -723,11 +723,6 @@ namespace arookas {
 #endif
 			mKonstAlpha = new Vector4d(konst[0], konst[1], konst[2], konst[3]);
 		}
-
-		protected const int cTopLeft = 0;
-		protected const int cTopRight = 1;
-		protected const int cBottomLeft = 2;
-		protected const int cBottomRight = 3;
 
 		protected const int cTextureSlots = 4;
 
