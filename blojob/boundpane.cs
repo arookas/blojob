@@ -35,6 +35,10 @@ namespace arookas {
 		public bloPane getPane() {
 			return mPane;
 		}
+		public TPane getPane<TPane>()
+			where TPane : bloPane {
+			return (mPane as TPane);
+		}
 
 		public virtual bool update() {
 			if (mPositionActive) {
