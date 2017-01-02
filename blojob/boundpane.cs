@@ -1,10 +1,8 @@
 ﻿
 namespace arookas {
 
-	public class bloBoundPane {
+	public class bloBoundPane : bloPaneInterpolator {
 
-		protected bloPane mPane;
-		protected bloRectangle mRect;
 		protected bloPoint mPosition, mSize;
 		protected bloPoint mPositionTop, mPositionMid, mPositionBot;
 		protected bloPoint mSizeTop, mSizeMid, mSizeBot;
@@ -12,17 +10,16 @@ namespace arookas {
 		protected double mSizeTime, mSizeStep;
 		protected bool mPositionActive, mSizeActive;
 
-		public bloBoundPane(bloPane pane) {
-			initialize(pane);
+		public bloBoundPane(bloPane pane)
+			: base(pane) {
+			initialize();
 		}
-		public bloBoundPane(bloScreen screen, uint name) {
-			initialize(screen.search(name));
+		public bloBoundPane(bloScreen screen, uint name)
+			: base(screen, name) {
+			initialize();
 		}
 
-		void initialize(bloPane pane) {
-			mPane = pane;
-			mRect = pane.getRectangle();
-
+		void initialize() {
 			mPositionTime = 0.0d;
 			mPositionStep = 0.0d;
 			mPositionActive = false;
@@ -32,15 +29,7 @@ namespace arookas {
 			mSizeActive = false;
 		}
 
-		public bloPane getPane() {
-			return mPane;
-		}
-		public TPane getPane<TPane>()
-			where TPane : bloPane {
-			return (mPane as TPane);
-		}
-
-		public virtual bool update() {
+		public override bool update() {
 			if (mPositionActive) {
 				if (mPositionTime > 1.0d) {
 					mPositionTime = 1.0d;
@@ -82,7 +71,7 @@ namespace arookas {
 			mSizeActive = true;
 		}
 
-		static void makeNewPosition(double time, bloPoint top, bloPoint mid, bloPoint bot, out bloPoint result) {
+		protected static void makeNewPosition(double time, bloPoint top, bloPoint mid, bloPoint bot, out bloPoint result) {
 			double botFactor = (time * time);
 			double midFactor = (2.0d * (1.0d - time) * time);
 			double topFactor = ((1.0d - time) * (1.0d - time));

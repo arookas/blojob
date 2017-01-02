@@ -1,25 +1,22 @@
 ﻿
 namespace arookas {
 
-	public class bloExPane {
+	public class bloExPane : bloPaneInterpolator {
 
-		bloPane mPane;
-		bloRectangle mRect;
-		bloCoord2D mOffset, mSize;
-		double mAlphaCurrent, mAlphaStep, mAlphaGoal;
-		bool mOffsetActive, mSizeActive, mAlphaActive;
+		protected bloCoord2D mOffset, mSize;
+		protected double mAlphaCurrent, mAlphaStep, mAlphaGoal;
+		protected bool mOffsetActive, mSizeActive, mAlphaActive;
 
-		public bloExPane(bloPane pane) {
-			initialize(pane);
+		public bloExPane(bloPane pane)
+			: base(pane) {
+			initialize();
 		}
-		public bloExPane(bloScreen screen, uint name) {
-			initialize(screen.search(name));
+		public bloExPane(bloScreen screen, uint name)
+			: base(screen, name) {
+			initialize();
 		}
 
-		void initialize(bloPane pane) {
-			mPane = pane;
-			mRect = mPane.getRectangle();
-
+		void initialize() {
 			mAlphaCurrent = 255.0d;
 			mAlphaStep = 0.0d;
 			mAlphaGoal = 0.0d;
@@ -32,15 +29,7 @@ namespace arookas {
 			mAlphaActive = false;
 		}
 
-		public bloPane getPane() {
-			return mPane;
-		}
-		public TPane getPane<TPane>()
-			where TPane : bloPane {
-			return (mPane as TPane);
-		}
-
-		public bool update() {
+		public override bool update() {
 			if (mOffsetActive) {
 				if (mOffset.update()) {
 					mOffsetActive = false;
