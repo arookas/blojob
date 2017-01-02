@@ -1,7 +1,7 @@
 ﻿
 namespace arookas {
 
-	abstract class bloPaneInterpolator {
+	public abstract class bloPaneInterpolator {
 
 		protected bloPane mPane;
 		protected bloRectangle mRect;
